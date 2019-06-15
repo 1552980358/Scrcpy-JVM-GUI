@@ -1,0 +1,22 @@
+<idea-plugin>
+    <id>com.skynight.scrcpy</id>
+    <name>Scrcpy - JVM GUI</name>
+    <vendor email="1552980358@qq.com" url="https://github.com/1552980358">1552980358</vendor>
+
+    <!--suppress PluginXmlValidity -->
+    <description>GUI of Scrcpy with GUI</description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+</idea-plugin>
