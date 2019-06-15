@@ -2,6 +2,7 @@ package com.skynight.scrcpy
 
 import com.skynight.scrcpy.BaseIndex.Companion.PackageFileList
 import com.skynight.scrcpy.BaseIndex.Companion.WidgetWithTextHeight
+import com.skynight.scrcpy.BaseIndex.Companion.BitRateList
 import com.skynight.scrcpy.widgets.CheckBox
 import com.skynight.scrcpy.widgets.RadioButton
 import java.awt.Color
@@ -70,21 +71,6 @@ class MainWindow(private val wired: Boolean) : JFrame("Scrcpy - JVM GUI") {
         connectDevice.addActionListener {
             onConnect()
         }
-        /*
-        connect.addMenuListener(object : MenuListener {
-            override fun menuSelected(e: MenuEvent?) {
-                onConnect()
-            }
-
-            override fun menuDeselected(e: MenuEvent?) {
-                //
-            }
-
-            override fun menuCanceled(e: MenuEvent?) {
-                //
-            }
-        })
-        */
     }
 
     private fun onConnect() {
@@ -109,15 +95,19 @@ class MainWindow(private val wired: Boolean) : JFrame("Scrcpy - JVM GUI") {
             }
             adbDevices.add(device.toString())
         }
-/*
-        if (adbDevices .size> 1) {
 
-            return
-        }
-*/
         for (i in CheckBoxes) {
             command.add(i.getArg())
         }
+
+        val bitrate = when (bitRate) {
+            0 -> ""
+            4 -> {
+                "-b ${customBitRate}M"
+            }
+            else -> "-b ${BitRateList[bitRate]}M"
+        }
+        command.add(bitrate)
 
         Runtime.getRuntime().exec(command.toTypedArray())
     }

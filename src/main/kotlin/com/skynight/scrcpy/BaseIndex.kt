@@ -53,5 +53,11 @@ class BaseIndex {
         )
         @Suppress("BooleanLiteralArgument", "SpellCheckingInspection")
         val ScrcpyGetOrder = arrayListOf(false, true, false, false, false)
+
+        val BitRateList = mapOf(
+            1 to "30",
+            2 to "20",
+            3 to "4"
+        )
     }
 }

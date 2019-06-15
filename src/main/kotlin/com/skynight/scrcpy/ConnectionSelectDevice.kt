@@ -19,7 +19,6 @@ class ConnectionSelectDevice(list: List<String>): JFrame("选择设备") {
         isVisible = false
 
         for (i in list) {
-
         }
 
     }
