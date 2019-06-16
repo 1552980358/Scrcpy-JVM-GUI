@@ -1,7 +1,11 @@
 package com.skynight.scrcpy
 
-import com.skynight.scrcpy.BaseIndex.Companion.ADBWirelessStepsBtn
-import com.skynight.scrcpy.BaseIndex.Companion.ADBWirelessStepsText
+import com.skynight.scrcpy.Base.ControlCenter
+import com.skynight.scrcpy.Base.BaseIndex.Companion.ADBWirelessStepsBtn
+import com.skynight.scrcpy.Base.BaseIndex.Companion.ADBWirelessStepsText
+import com.skynight.scrcpy.Base.runAdb
+import com.skynight.scrcpy.Base.runAdbGetList
+import com.skynight.scrcpy.Base.runAdbGetText
 import com.skynight.scrcpy.widgets.Button
 import java.awt.Color
 import java.awt.Toolkit
@@ -52,7 +56,7 @@ class ADBWirelessConnection : JFrame("通过WiFi使用TCP/IP连接") {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
         setSize(350, 300)
-        setLocation((screenSize.width - 300) / 2, (screenSize.height - 120) / 2)
+        setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
         defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
         isVisible = true
 
@@ -79,7 +83,8 @@ class ADBWirelessConnection : JFrame("通过WiFi使用TCP/IP连接") {
             jButton.text = ADBWirelessStepsBtn[page]
             when (page) {
                 1 -> {
-                    val list = runAdbGetList("shell am start com.android.settings/.wifi.WifiPickerActivity")
+                    val list =
+                        runAdbGetList("shell am start com.android.settings/.wifi.WifiPickerActivity")
                     if (list.contains("exception") || list.contains("error")) {
                         jTextArea.text = "失败, 请手动打开并设置"
                         return@addActionListener

@@ -1,12 +1,13 @@
 package com.skynight.scrcpy
 
+import com.skynight.scrcpy.Base.ControlCenter
 import com.skynight.scrcpy.widgets.Button
 import com.skynight.scrcpy.widgets.Panel
 import com.skynight.scrcpy.widgets.RadioButton
 import java.awt.Toolkit
 import javax.swing.*
 
-class SelectConnection: JFrame("选择连接方式") {
+class SelectConnectionWindow: JFrame("选择连接方式") {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
@@ -52,6 +53,7 @@ class SelectConnection: JFrame("选择连接方式") {
             val controlCenter = ControlCenter.getInstance()
             controlCenter.isWiredMethod = singleWired.isSelected
             controlCenter.controlListener.onHandleConnectionMethod()
+            dispose()
         }
 
         isVisible = true

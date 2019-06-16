@@ -1,13 +1,15 @@
 package com.skynight.scrcpy
 
-import com.skynight.scrcpy.BaseIndex.Companion.PackageFileList
+import com.skynight.scrcpy.Base.ControlCenter
+import com.skynight.scrcpy.Base.BaseIndex.Companion.PackageFileList
+import com.skynight.scrcpy.Base.exitButton
 import java.awt.Color
 import java.awt.Toolkit
 import java.io.File
 import javax.swing.JPanel
 import javax.swing.*
 
-class Splash() : JFrame("启动中, 请稍后...") {
+class SplashWindow : JFrame("启动中, 请稍后...") {
 
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize

@@ -1,8 +1,10 @@
 package com.skynight.scrcpy
 
-import com.skynight.scrcpy.BaseIndex.Companion.PackageFileList
-import com.skynight.scrcpy.BaseIndex.Companion.WidgetWithTextHeight
-import com.skynight.scrcpy.BaseIndex.Companion.BitRateList
+import com.skynight.scrcpy.Base.ControlCenter
+import com.skynight.scrcpy.Base.BaseIndex.Companion.PackageFileList
+import com.skynight.scrcpy.Base.BaseIndex.Companion.WidgetWithTextHeight
+import com.skynight.scrcpy.Base.BaseIndex.Companion.BitRateList
+import com.skynight.scrcpy.Base.runAdbGetList
 import com.skynight.scrcpy.widgets.CheckBox
 import com.skynight.scrcpy.widgets.RadioButton
 import java.awt.Color
@@ -12,7 +14,7 @@ import javax.swing.*
 
 class MainWindow : JFrame("Scrcpy - JVM GUI") {
     private var bitRate = 0
-    private val customBitRate = JTextField(2)
+    private val customBitRate = JTextField(3)
     @Suppress("PrivatePropertyName")
     private val CheckBoxes = mutableListOf<CheckBox>()
 
@@ -82,7 +84,7 @@ class MainWindow : JFrame("Scrcpy - JVM GUI") {
             "/c",
             System.getProperty("user.dir") + File.separator + PackageFileList[6]
         )
-        val adbDevicesRes = runAdbGetList("deices")
+        val adbDevicesRes = runAdbGetList("devices")
 
         val adbDevices = mutableListOf<String>()
         for (i: Int in 1 until adbDevicesRes.size - 1) {
@@ -94,6 +96,23 @@ class MainWindow : JFrame("Scrcpy - JVM GUI") {
                 device.append(j)
             }
             adbDevices.add(device.toString())
+        }
+
+        if (adbDevices.size > 1) {
+            command.add("-s")
+            val device = if (!ControlCenter.getInstance().isWiredMethod) {
+                var j = ""
+                searchDevice@ for (i in adbDevices) {
+                    if (i.contains("192.168")) {
+                        j = i
+                        break@searchDevice
+                    }
+                }
+                j
+            } else {
+                adbDevices[1]
+            }
+            command.add(device)
         }
 
         for (i in CheckBoxes) {
@@ -109,7 +128,11 @@ class MainWindow : JFrame("Scrcpy - JVM GUI") {
         }
         command.add(bitrate)
 
+        println(command)
+
         Runtime.getRuntime().exec(command.toTypedArray())
+
+        ControlKeyWindow.getInstance().showFrame()
     }
 
     private fun setBitRate(mainPanel: JPanel) {
@@ -171,8 +194,7 @@ class MainWindow : JFrame("Scrcpy - JVM GUI") {
         jPanel.add(bitRatePanel3)
         bitRatePanel3.background = Color.WHITE
         bitRatePanel3.isVisible = false
-        bitRatePanel3.setBounds(10, 72, 230, WidgetWithTextHeight)
-        //bitRatePanel3.layout = null
+        bitRatePanel3.setBounds(10, 72, 230, WidgetWithTextHeight + 1)
 
         val bitRate5 = RadioButton("自定义(单位M)")
         buttonGroup.add(bitRate5)
@@ -182,7 +204,7 @@ class MainWindow : JFrame("Scrcpy - JVM GUI") {
             bitRate = 4
         }
         bitRatePanel3.add(customBitRate)
-        customBitRate.setSize(100, WidgetWithTextHeight)
+        customBitRate.setSize(100, 26)
         bitRatePanel3.isVisible = true
     }
 
@@ -216,7 +238,7 @@ class MainWindow : JFrame("Scrcpy - JVM GUI") {
         CheckBoxes.add(CheckBox("鼠标操控", true, 1))
         jPanel2.add(CheckBoxes[CheckBoxes.lastIndex])
 
-        CheckBoxes.add(CheckBox("显示帧数", false, 4))
+        CheckBoxes.add(CheckBox("过期帧渲染", false, 4))
         jPanel2.add(CheckBoxes[CheckBoxes.lastIndex])
 
         jPanel2.isVisible = true

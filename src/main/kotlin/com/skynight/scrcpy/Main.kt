@@ -1,12 +1,8 @@
 package com.skynight.scrcpy
 
-import java.awt.SystemTray
-import java.awt.Toolkit
-import java.awt.TrayIcon
+import com.skynight.scrcpy.Base.ControlCenter
 
 fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
-
-    //test()
 
     //*
     ControlCenter.getInstance().controlListener = object : ControlListener {
@@ -14,7 +10,7 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
             super.passFileCheck()
             println("passFileCheck")
             //MainWindow()
-            SelectConnection()
+            SelectConnectionWindow()
         }
 
         override fun onHandleConnectionMethod() {
@@ -28,7 +24,7 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
 
         override fun onConfirmConnection() {
             println("onConfirmConnection")
-            Connection()
+            TestConnection()
         }
 
         override fun passAdbCheck() {
@@ -39,7 +35,7 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
     }
 
     // 启动
-    Splash()
+    SplashWindow()
     //*/
 }
 
@@ -66,6 +62,7 @@ interface ControlListener {
 /* Test Program Fun */
 @Suppress("unused")
 fun test() {
+    /*
     if (SystemTray.isSupported()) {
         val systemTray = SystemTray.getSystemTray()
         val trayIcon = TrayIcon(
@@ -82,4 +79,8 @@ fun test() {
         )
 
     }
+
+     */
+
+
 }

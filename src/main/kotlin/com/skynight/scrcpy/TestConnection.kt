@@ -1,5 +1,8 @@
 package com.skynight.scrcpy
 
+import com.skynight.scrcpy.Base.ControlCenter
+import com.skynight.scrcpy.Base.checkAdbConnect
+import com.skynight.scrcpy.Base.exitButton
 import java.awt.Color
 import java.awt.Toolkit
 import javax.swing.JFrame
@@ -7,13 +10,13 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JProgressBar
 
-class Connection : JFrame("启动中, 请稍后...") {
+class TestConnection : JFrame("启动中, 请稍后...") {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
         setSize(300, 120)
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
-        defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
+        defaultCloseOperation = DISPOSE_ON_CLOSE
         isVisible = true
         val panel = JPanel()
         add(panel)
