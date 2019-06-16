@@ -1,20 +1,20 @@
 package com.skynight.scrcpy
 
-import com.intellij.ui.layout.jbTextField
 import com.skynight.scrcpy.BaseIndex.Companion.ADBWirelessStepsBtn
 import com.skynight.scrcpy.BaseIndex.Companion.ADBWirelessStepsText
+import com.skynight.scrcpy.widgets.Button
 import java.awt.Color
 import java.awt.Toolkit
 import java.lang.StringBuilder
 import javax.swing.*
 
-class ADBWiredConnection(listener: ControlListener) : JFrame("USB有线连接") {
+class ADBWiredConnection : JFrame("USB有线连接") {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
         setSize(350, 300)
-        setLocation((screenSize.width - 300) / 2, (screenSize.height - 120) / 2)
-        defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+        setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
+        defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
         isVisible = true
 
         val jPanel = JPanel()
@@ -35,28 +35,25 @@ class ADBWiredConnection(listener: ControlListener) : JFrame("USB有线连接") 
         )
         jPanel.add(jTextArea)
         jTextArea.isEditable = false
-        jTextArea.setBounds(5, 0, 350, 200)
+        jTextArea.setBounds(5, 0, 350, 184)
 
-        val jButton = JButton("已按步骤完成")
-        jButton.background = Color.BLACK
-        jButton.foreground = Color.WHITE
+        val jButton = Button("已按步骤完成", 10, 200, 310, 50)
         jButton.addActionListener {
-            listener.onConfirmConnection(true)
+            ControlCenter.getInstance().controlListener.onConfirmConnection()
             dispose()
         }
-        jButton.setBounds(10, 200, 310, 50)
         jPanel.add(jButton)
 
         jPanel.isVisible = true
     }
 }
 
-class ADBWirelessConnection(listener: ControlListener) : JFrame("通过WiFi使用TCP/IP连接") {
+class ADBWirelessConnection : JFrame("通过WiFi使用TCP/IP连接") {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
         setSize(350, 300)
         setLocation((screenSize.width - 300) / 2, (screenSize.height - 120) / 2)
-        defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+        defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
         isVisible = true
 
         val jPanel = JPanel()
@@ -74,9 +71,8 @@ class ADBWirelessConnection(listener: ControlListener) : JFrame("通过WiFi使�
 
         // IP 抓取 adb shell ip route list table 0 | grep "local 192.168."
         // 跳转wifi adb shell am start com.android.settings/.wifi.WifiPickerActivity
-        val jButton = JButton(ADBWirelessStepsBtn[0])
+        val jButton = Button(ADBWirelessStepsBtn[0], 10, 200, 310, 50)
         jPanel.add(jButton)
-        jButton.setBounds(10, 200, 310, 50)
         jButton.addActionListener {
             page++
             jTextArea.text = ADBWirelessStepsText[page]
@@ -95,49 +91,52 @@ class ADBWirelessConnection(listener: ControlListener) : JFrame("通过WiFi使�
                     jTextArea.append("完成")
                 }
                 3 -> {
+                    Thread {
 
-                    val text: String
-                    val ip = StringBuilder("")
-                    try {
-                        text =
-                            runAdbGetList("shell ip route list table 0 | grep \"192.168.\" | grep local | grep -v broadcast")[0]
-                        print(text)
-                        var i = text.indexOf("192")
-                        print(i)
+                        val text: String
+                        val ip = StringBuilder("")
+                        try {
+                            text =
+                                runAdbGetList("shell ip route list table 0 | grep \"192.168.\" | grep local | grep -v broadcast")[0]
+                            print(text)
+                            var i = text.indexOf("192")
+                            print(i)
 
-                        while (text[i].toString() != " ") {
-                            ip.append(i)
-                            i++
+                            while (text[i].toString() != " ") {
+                                ip.append(i)
+                                i++
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
 
-                    /* 192.168.1.[0-9]{1,3} */
-                    if (!ip.toString().matches("192.168.1.[0-9]{1,3}".toRegex())) {
-                        jTextArea.append("获取失败, 请手动输入\n")
-                        val jTextField = JTextField()
-                        jPanel.add(jTextField)
-                        jTextField.setBounds(5, 150, 250, 25)
+                        /* 192.168.1.[0-9]{1,3} */
+                        if (!ip.toString().matches("192.168.1.[0-9]{1,3}".toRegex())) {
+                            jTextArea.append("获取失败, 请手动输入\n")
+                            val jTextField = JTextField()
+                            jPanel.add(jTextField)
+                            jTextField.setBounds(5, 150, 250, 25)
 
-                        val confirm = JButton("确定")
-                        jPanel.add(confirm)
-                        confirm.setBounds(255, 150, 70, 25)
-                        confirm.addActionListener {
-                            ip.clear()
-                            ip.append(jTextField.text)
-                            jTextArea.append("输入的IP为: $ip\n")
-                            connectToIp(ip.toString(), jTextArea)
+                            val confirm = Button("确定", 255, 150, 70, 25)
+                            jPanel.add(confirm)
                             confirm.isVisible = false
-                            jTextField.isVisible = false
+                            confirm.addActionListener {
+                                ip.clear()
+                                ip.append(jTextField.text)
+                                jTextArea.append("输入的IP为: $ip\n")
+                                connectToIp(ip.toString(), jTextArea)
+                                confirm.isVisible = false
+                                jTextField.isVisible = false
+                            }
+                            confirm.isVisible = true
+                        } else {
+                            jTextArea.append("获取成功: $ip\n")
+                            connectToIp(ip.toString(), jTextArea)
                         }
-                    } else {
-                        jTextArea.append("获取成功: $ip\n")
-                        connectToIp(ip.toString(), jTextArea)
-                    }
+                    }.start()
                 }
                 5 -> {
-                    listener.onConfirmConnection(false)
+                    ControlCenter.getInstance().controlListener.onConfirmConnection()
                     dispose()
                 }
             }

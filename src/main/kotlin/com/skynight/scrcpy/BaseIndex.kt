@@ -43,7 +43,6 @@ class BaseIndex {
             "完成"
         )
 
-
         val ScrcpyArgsList = arrayListOf(
             "-f",
             "-n",

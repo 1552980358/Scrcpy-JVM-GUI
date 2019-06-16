@@ -7,7 +7,7 @@ import java.io.File
 import javax.swing.JPanel
 import javax.swing.*
 
-class Splash(listener: ControlListener) : JFrame("启动中, 请稍后...") {
+class Splash() : JFrame("启动中, 请稍后...") {
 
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
@@ -36,7 +36,7 @@ class Splash(listener: ControlListener) : JFrame("启动中, 请稍后...") {
                 return@Thread
             }
 
-            listener.passFileCheck()
+            ControlCenter.getInstance().controlListener.passFileCheck()
             dispose()
             return@Thread
         }.start()

@@ -11,6 +11,7 @@ class CheckBox(title: String, selection: Boolean, private val index: Int): JChec
         background = Color.WHITE
         icon = ImageIcon("icons/CheckBox_UnSelected.png")
         selectedIcon = ImageIcon("icons/CheckBox_Selected.png")
+        isFocusPainted = false
     }
     fun getArg(): String {
         return if (BaseIndex.ScrcpyGetOrder[index] != isSelected) {

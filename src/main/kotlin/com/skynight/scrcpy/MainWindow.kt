@@ -10,7 +10,7 @@ import java.awt.Toolkit
 import java.io.File
 import javax.swing.*
 
-class MainWindow(private val wired: Boolean) : JFrame("Scrcpy - JVM GUI") {
+class MainWindow : JFrame("Scrcpy - JVM GUI") {
     private var bitRate = 0
     private val customBitRate = JTextField(2)
     @Suppress("PrivatePropertyName")
@@ -58,7 +58,7 @@ class MainWindow(private val wired: Boolean) : JFrame("Scrcpy - JVM GUI") {
         val about = JMenu("关于")
         jMenuBar.add(about)
         val device = JMenu("设备")
-        val busying = JMenuItem(if (!wired) "USB有线连接" else "TCP/IP无线连接")
+        val busying = JMenuItem(if (ControlCenter.getInstance().isWiredMethod) "USB有线连接" else "TCP/IP无线连接")
         device.add(busying)
         jMenuBar.add(device)
 
@@ -111,7 +111,6 @@ class MainWindow(private val wired: Boolean) : JFrame("Scrcpy - JVM GUI") {
 
         Runtime.getRuntime().exec(command.toTypedArray())
     }
-
 
     private fun setBitRate(mainPanel: JPanel) {
         val jPanel = JPanel()

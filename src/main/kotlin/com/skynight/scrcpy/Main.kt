@@ -5,35 +5,42 @@ import java.awt.Toolkit
 import java.awt.TrayIcon
 
 fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
-   //test()
+
+    //test()
 
     //*
-    val controlListener = object : ControlListener {
+    ControlCenter.getInstance().controlListener = object : ControlListener {
         override fun passFileCheck() {
             super.passFileCheck()
             println("passFileCheck")
-            //ConnectionSelectDevice(listOf("192.168.1.100:5555"))
-            MainWindow(true)
-            //ADBWiredConnection(this)
-            //ADBWirelessConnection(this)
+            //MainWindow()
+            SelectConnection()
         }
 
-        override fun onConfirmConnection(wired: Boolean) {
-            super.onConfirmConnection(wired)
+        override fun onHandleConnectionMethod() {
+            super.onHandleConnectionMethod()
+            if (ControlCenter.getInstance().isWiredMethod) {
+                ADBWiredConnection()
+            } else {
+                ADBWirelessConnection()
+            }
+        }
+
+        override fun onConfirmConnection() {
             println("onConfirmConnection")
-            Connection(this, wired)
+            Connection()
         }
 
-        override fun passAdbCheck(wired: Boolean) {
-            super.passAdbCheck(wired)
+        override fun passAdbCheck() {
+            super.passAdbCheck()
             println("passAdbCheck")
-            MainWindow(wired)
+            MainWindow()
         }
     }
 
     // 启动
-    Splash(controlListener)
-        //*/
+    Splash()
+    //*/
 }
 
 interface ControlListener {
@@ -41,15 +48,20 @@ interface ControlListener {
 
     }
 
-    fun passAdbCheck(wired: Boolean) {
+    fun onHandleConnectionMethod() {
 
     }
 
-    fun onConfirmConnection(wired: Boolean) {
+    fun onConfirmConnection() {
 
     }
+
+    fun passAdbCheck() {
+
+
+    }
+
 }
-
 
 /* Test Program Fun */
 @Suppress("unused")
