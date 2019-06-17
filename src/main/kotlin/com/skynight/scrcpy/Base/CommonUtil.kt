@@ -1,6 +1,7 @@
 package com.skynight.scrcpy.Base
 
 import com.skynight.scrcpy.Base.BaseIndex.Companion.PackageFileList
+import com.sun.jna.StringArray
 import java.awt.Color
 import java.io.File
 import java.util.*
@@ -69,17 +70,34 @@ fun runAdbGetText(commands: String): String {
     }
     return text.toString()
 }
-
-fun runAdbGetText(commands: Array<String>): String {
-    val text = StringBuilder()
-    for (i in runAdbGetList(commands)) {
-        text.append(i)
+/*
+fun runAdbGetList(commands: String): List<String> {
+    return try {
+        // 已有ADB
+        val p = Runtime.getRuntime()
+            .exec("adb $commands")
+        p.waitFor()
+        p.inputStream.bufferedReader().readLines()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        try {
+            // 封装ADB
+            val p = Runtime.getRuntime()
+                .exec(System.getProperty("user.dir") + File.separator + PackageFileList[0] + commands)
+            p.waitFor()
+            p.inputStream.bufferedReader().readLines()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return listOf()
+        }
     }
-    return text.toString()
 }
+*/
 
 fun runAdbGetList(commands: String): List<String> {
+    //println(commands)
     val array = if (commands.contains(" ")) {
+        //println("1")
         val arrayList = ArrayList(Arrays.asList(
             *commands
                 .split(" ".toRegex())
@@ -92,14 +110,18 @@ fun runAdbGetList(commands: String): List<String> {
         }
         tmp.toList().toTypedArray()
     } else {
+        //println("2")
         arrayOf("adb", commands)
     }
+
+    //println(array)
 
     return runAdbGetList(array)
 }
 
+
 fun runAdbGetList(commands: Array<String>): List<String> {
-    //print(commands)
+    //println(commands)
 
     return try {
         // 已有ADB

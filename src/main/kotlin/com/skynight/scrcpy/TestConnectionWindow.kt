@@ -10,7 +10,7 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JProgressBar
 
-class TestConnection : JFrame("启动中, 请稍后...") {
+class TestConnectionWindow : JFrame("启动中, 请稍后...") {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 

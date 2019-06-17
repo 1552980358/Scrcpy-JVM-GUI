@@ -1,10 +1,15 @@
 package com.skynight.scrcpy
 
 import com.skynight.scrcpy.Base.ControlCenter
+import com.skynight.scrcpy.Base.GetConnectedDevices
+import java.io.File
+import java.io.FileWriter
 
 fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
+    //test()
 
-    //*
+    MainWindow()
+    /*
     ControlCenter.getInstance().controlListener = object : ControlListener {
         override fun passFileCheck() {
             super.passFileCheck()
@@ -16,15 +21,15 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
         override fun onHandleConnectionMethod() {
             super.onHandleConnectionMethod()
             if (ControlCenter.getInstance().isWiredMethod) {
-                ADBWiredConnection()
+                ADBWiredWindow()
             } else {
-                ADBWirelessConnection()
+                ADBWirelessWindow()
             }
         }
 
         override fun onConfirmConnection() {
             println("onConfirmConnection")
-            TestConnection()
+            TestConnectionWindow()
         }
 
         override fun passAdbCheck() {
@@ -36,7 +41,7 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
 
     // 启动
     SplashWindow()
-    //*/
+    */
 }
 
 interface ControlListener {
@@ -81,6 +86,15 @@ fun test() {
     }
 
      */
-
+    /*
+    GetConnectedDevices.reGetConnectedDevices()
+    for (i in GetConnectedDevices.getInstance().getDeviceList()) {
+        println("$i = ${GetConnectedDevices.getInstance().getDeviceStateList()[i]}")
+        println(GetConnectedDevices.getInstance().getDeviceBrand(i))
+        println(GetConnectedDevices.getInstance().getDeviceModel(i))
+        println(GetConnectedDevices.getInstance().getDeviceSDK(i))
+        println(GetConnectedDevices.getInstance().getDeviceImei(i))
+    }
+*/
 
 }

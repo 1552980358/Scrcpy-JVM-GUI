@@ -12,7 +12,7 @@ import java.awt.Toolkit
 import java.lang.StringBuilder
 import javax.swing.*
 
-class ADBWiredConnection : JFrame("USB有线连接") {
+class ADBWiredWindow : JFrame("USB有线连接") {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
@@ -52,7 +52,7 @@ class ADBWiredConnection : JFrame("USB有线连接") {
     }
 }
 
-class ADBWirelessConnection : JFrame("通过WiFi使用TCP/IP连接") {
+class ADBWirelessWindow : JFrame("通过WiFi使用TCP/IP连接") {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
         setSize(350, 300)

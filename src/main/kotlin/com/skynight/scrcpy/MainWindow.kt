@@ -4,12 +4,17 @@ import com.skynight.scrcpy.Base.ControlCenter
 import com.skynight.scrcpy.Base.BaseIndex.Companion.PackageFileList
 import com.skynight.scrcpy.Base.BaseIndex.Companion.WidgetWithTextHeight
 import com.skynight.scrcpy.Base.BaseIndex.Companion.BitRateList
+import com.skynight.scrcpy.Base.GetConnectedDevices
 import com.skynight.scrcpy.Base.runAdbGetList
 import com.skynight.scrcpy.widgets.CheckBox
+import com.skynight.scrcpy.widgets.Panel
 import com.skynight.scrcpy.widgets.RadioButton
 import java.awt.Color
 import java.awt.Toolkit
+import java.awt.event.ActionEvent
+import java.awt.event.KeyEvent
 import java.io.File
+import java.security.KeyStore
 import javax.swing.*
 
 class MainWindow : JFrame("Scrcpy - JVM GUI") {
@@ -46,8 +51,9 @@ class MainWindow : JFrame("Scrcpy - JVM GUI") {
         jPanel.layout = null
         jPanel.setSize(750, 350)
 
-        setBitRate(jPanel)
-        setTools(jPanel)
+        Thread { setBitRate(jPanel) }.start()
+        Thread { setTools(jPanel)}.start()
+        Thread { getDeviceInfo(jPanel) }.start()
 
         jPanel.isVisible = true
     }
@@ -59,15 +65,21 @@ class MainWindow : JFrame("Scrcpy - JVM GUI") {
 
         val about = JMenu("关于")
         jMenuBar.add(about)
+        about.setMnemonic('c')
         val device = JMenu("设备")
         val busying = JMenuItem(if (ControlCenter.getInstance().isWiredMethod) "USB有线连接" else "TCP/IP无线连接")
+        busying.background = Color.WHITE
         device.add(busying)
         jMenuBar.add(device)
 
         val connect = JMenu("开始投屏")
         jMenuBar.add(connect)
         val connectDevice = JMenuItem("单设备投屏")
+        connectDevice.setMnemonic('C')
+        connectDevice.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.SHIFT_MASK)
+        connectDevice.background = Color.WHITE
         val connectDevices = JMenuItem("多设备同时投屏(施工未开放)")
+        connectDevices.background = Color.WHITE
         connect.add(connectDevice)
         connect.add(connectDevices)
         connectDevice.addActionListener {
@@ -85,6 +97,8 @@ class MainWindow : JFrame("Scrcpy - JVM GUI") {
             System.getProperty("user.dir") + File.separator + PackageFileList[6]
         )
         val adbDevicesRes = runAdbGetList("devices")
+
+        //GetConnectedDevices()
 
         val adbDevices = mutableListOf<String>()
         for (i: Int in 1 until adbDevicesRes.size - 1) {
@@ -135,12 +149,23 @@ class MainWindow : JFrame("Scrcpy - JVM GUI") {
         ControlKeyWindow.getInstance().showFrame()
     }
 
+    private fun getDeviceInfo(mainPanel: JPanel) {
+        val jPanel = Panel(0, 0, width / 3, height)
+        mainPanel.add(jPanel)
+        jPanel.border = BorderFactory.createTitledBorder("~ 设备信息 ~")
+
+        val getConnectedDevices = GetConnectedDevices.getInstance()
+        for (i in getConnectedDevices.getDeviceList()) {
+
+        }
+    }
+
     private fun setBitRate(mainPanel: JPanel) {
         val jPanel = JPanel()
         jPanel.border = BorderFactory.createTitledBorder("~ 投屏比特率 ~")
         mainPanel.add(jPanel)
         jPanel.background = Color.WHITE
-        jPanel.setSize(250, 120)
+        jPanel.setBounds(width / 3, 0, width / 3, 120)
         jPanel.layout = null
 
         val bitRatePanel1 = JPanel()
@@ -212,7 +237,7 @@ class MainWindow : JFrame("Scrcpy - JVM GUI") {
         val jPanel = JPanel()
         jPanel.border = BorderFactory.createTitledBorder("~ 附加选项 ~")
         mainPanel.add(jPanel)
-        jPanel.setBounds(0, 120, 250, 60)
+        jPanel.setBounds(width / 3, 120, width / 3, 60)
         jPanel.background = Color.WHITE
         jPanel.setSize(250, 120)
         jPanel.layout = null
