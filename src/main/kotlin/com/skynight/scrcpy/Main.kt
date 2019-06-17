@@ -1,6 +1,7 @@
 package com.skynight.scrcpy
 
 import com.skynight.scrcpy.Base.ControlCenter
+import com.skynight.scrcpy.Base.DecodeLanguagePack
 import com.skynight.scrcpy.Base.GetConnectedDevices
 import java.io.File
 import java.io.FileWriter
@@ -8,7 +9,14 @@ import java.io.FileWriter
 fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
     //test()
 
-    MainWindow()
+    DecodeLanguagePack.getInstance().setLocale().decode()
+    /* Test Step */
+    //SplashWindow()
+    //ADBWirelessWindow()
+    //ADBWiredWindow()
+    TestConnectionWindow()
+    //MainWindow()
+
     /*
     ControlCenter.getInstance().controlListener = object : ControlListener {
         override fun passFileCheck() {
@@ -96,5 +104,9 @@ fun test() {
         println(GetConnectedDevices.getInstance().getDeviceImei(i))
     }
 */
+    val file = File(System.getProperty("user.dir") + File.separator + DecodeLanguagePack.path)
+    for (i in file.list()) {
+        println(i)
+    }
 
 }

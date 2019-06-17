@@ -1,0 +1,111 @@
+{
+	"local": "zh-rCN",
+
+	"Windows": {
+		"ControlKeyWindow": "食用小提示"
+	},
+
+	"MainWindow": {
+		"title": "Scrcpy - JVM GUI",
+		"Menu": {
+			"about": "关于",
+			"devices": "设备",
+			"wired": "USB有线连接",
+			"wireless": "TCP/IP无线桥接",
+			"scrcpy": "开始投屏",
+			"single": "单设备投屏",
+			"multi": "多设备同时投屏(施工未开放)"
+		},
+		"DeviceInfo": {
+			"title": "~ 设备信息 ~",
+			"brand": "品牌: ",
+			"model": "型号: ",
+			"adb_id": "设备ADB ID: ",
+			"status": "设备状态",
+			"type": "连接方式: ",
+			"wired": "USB有线连接",
+			"wireless": "TCP/IP无线连接",
+			"statuses": [
+				"在线",
+				"离线",
+				"未验证",
+				"已断开"
+			]
+		},
+		"Tools": {
+			"title": "~ 附加选项 ~",
+			"fullscreen": "全屏显示",
+			"touch_shown": "触摸显示",
+			"control": "鼠标操控",
+			"frame_treat": "过期帧渲染",
+			"keep_front": "保持前端"
+		},
+		"BitRate": {
+			"title": "~ 投屏比特率 ~",
+			"default": "8M (默认)",
+			"custom": "自定义(单位M)"
+		}
+	},
+
+	"SplashWindow": {
+		"title": "启动中, 请稍后...",
+		"check_file": "检查文件包...",
+		"check_file_fail": "文件包检查失败!"
+	},
+
+	"ADBWiredWindow": {
+		"title": "USB有线连接",
+		"step": "请于开发者选项中打开ADB调试, 然后使用USB连接计算机\n开发者选项打开方式:\n设置 → 关于{设备/手机} →\n\nMIUI\n - 多次点击\"MIUI版本\" → 返回 → 更多设置 → 开发者选项\n原生/类原生 Pie\n- 多次点击版本号 → 系统 → 高级 → 开发者选项\n",
+		"step_done": "已按步骤完成"
+	},
+
+	"ADBWirelessWindow": {
+		"title": "通过WiFi使用TCP/IP桥接",
+		"connect_fail": "失败, 请手动打开并设置",
+		"succeed": "完成",
+		"fetch_fail": "获取失败, 请手动输入\n",
+		"confirm": "确定",
+		"ip_input": "输入的IP为: %s\n",
+		"fetch_succeed": "获取成功: %s\n",
+		"connect_succeed": "与设备利用局域网连接成功",
+		"connect_failed": "请尝试使用adb手动连接, 命令如下:\nadb connect %s:5555",
+
+		"steps": [
+            "1.请于开发者选项中打开ADB调试, 然后使用USB连接计算机\n开发者选项打开方式:\n设置 → 关于{设备/手机} →\n\nMIUI\n - 多次点击\"MIUI版本\" → 返回 → 更多设置 → 开发者选项\n原生/类原生 Pie\n - 多次点击版本号 → 系统 → 高级 → 开发者选项\n",
+            "2.请连接与计算机相同的WiFi网络\n",
+            "3.设置端口中...\n",
+            "4.正在自动获取WiFi/Wlan的IP地址...\n",
+            "5.请断开USB连接",
+            "6.点击下方完成"
+        ],
+
+		"steps_btn": [
+            "打开WiFi/Wlan设置",
+            "设置端口",
+            "获取WiFi/Wlan的IP地址",
+            "下一步",
+            "下一步",
+            "完成"
+        ]
+	},
+
+	"SelectConnectionWindow": {
+		"title": "选择连接方式",
+		"single": "~ 单设备 ~",
+		"single_wireless": "有线连接",
+		"single_wired": "无线连接",
+		"multi": "~ 多设备 ~",
+		"multi_wired": "有线连接(施工未开放)",
+		"multi_wireless": "无线连接(施工未开放)",
+		"confiem": "确定"
+	},
+
+	"TestConnectionWindow": {
+		"title": "启动中, 请稍后...",
+		"connection_check": "检查设备连接...",
+		"connection_check_fail": "无法检测连接!",
+		"connection_check_succeed": "检查完成, 等待主程序加载...",
+		"time_remain": "还剩下%s秒"
+	}
+
+}

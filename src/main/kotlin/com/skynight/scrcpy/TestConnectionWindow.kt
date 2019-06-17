@@ -1,6 +1,7 @@
 package com.skynight.scrcpy
 
 import com.skynight.scrcpy.Base.ControlCenter
+import com.skynight.scrcpy.Base.DecodeLanguagePack
 import com.skynight.scrcpy.Base.checkAdbConnect
 import com.skynight.scrcpy.Base.exitButton
 import java.awt.Color
@@ -13,7 +14,9 @@ import javax.swing.JProgressBar
 class TestConnectionWindow : JFrame("启动中, 请稍后...") {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
+        val jsonObject = DecodeLanguagePack.getInstance().getWindowStrings("TestConnectionWindow")
 
+        title = jsonObject.get("title").asString
         setSize(300, 120)
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
         defaultCloseOperation = DISPOSE_ON_CLOSE
@@ -25,7 +28,7 @@ class TestConnectionWindow : JFrame("启动中, 请稍后...") {
         panel.isVisible = false
         panel.setSize(width, height)
 
-        val content = JLabel("检查设备连接...", JLabel.CENTER)
+        val content = JLabel(jsonObject.get("connection_check").asString, JLabel.CENTER)
         content.setBounds(0, 0, width - 16, 15)
         panel.add(content)
         panel.isVisible = true
@@ -33,7 +36,7 @@ class TestConnectionWindow : JFrame("启动中, 请稍后...") {
         Thread {
 
             if (!checkAdbConnect()) {
-                content.text = "无法检测连接!"
+                content.text = jsonObject.get("connection_check_fail").asString
                 exitButton(this, panel)
                 return@Thread
             }
@@ -46,12 +49,12 @@ class TestConnectionWindow : JFrame("启动中, 请稍后...") {
             jProgressBar.value = 0
             jProgressBar.isVisible = true
 
-            title = "检查完成, 等待主程序加载..."
+            title = jsonObject.get("connection_check_succeed").asString
 
             ControlCenter.getInstance().controlListener.passAdbCheck()
 
             for (i: Int in 1..3) {
-                content.text = "还剩下${4 - i}秒"
+                content.text = String.format(jsonObject.get("time_remain").asString, 4 - i)
                 try {
                     Thread.sleep(1000)
                 } catch (e: Exception) {

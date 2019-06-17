@@ -1,21 +1,20 @@
 package com.skynight.scrcpy
 
-import com.skynight.scrcpy.Base.ControlCenter
-import com.skynight.scrcpy.Base.BaseIndex.Companion.ADBWirelessStepsBtn
-import com.skynight.scrcpy.Base.BaseIndex.Companion.ADBWirelessStepsText
-import com.skynight.scrcpy.Base.runAdb
-import com.skynight.scrcpy.Base.runAdbGetList
-import com.skynight.scrcpy.Base.runAdbGetText
+import com.google.gson.JsonObject
+import com.skynight.scrcpy.Base.*
 import com.skynight.scrcpy.widgets.Button
 import java.awt.Color
 import java.awt.Toolkit
 import java.lang.StringBuilder
 import javax.swing.*
 
-class ADBWiredWindow : JFrame("USB有线连接") {
+class ADBWiredWindow : JFrame() {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
+        val jsonObject = DecodeLanguagePack.getInstance().getWindowStrings("ADBWiredWindow")
+
+        title = jsonObject.get("title").asString
         setSize(350, 300)
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
         defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
@@ -27,21 +26,12 @@ class ADBWiredWindow : JFrame("USB有线连接") {
         jPanel.background = Color.WHITE
         jPanel.layout = null
         jPanel.setSize(350, 300)
-        val jTextArea = JTextArea(
-            "请于开发者选项中打开ADB调试, 然后使用USB连接计算机\n" +
-                    "开发者选项打开方式:\n" +
-                    "设置 → 关于{设备/手机} →\n" +
-                    "\n" +
-                    "MIUI\n" +
-                    " - 多次点击\"MIUI版本\" → 返回 → 更多设置 → 开发者选项\n" +
-                    "原生/类原生 Pie\n" +
-                    " - 多次点击版本号 → 系统 → 高级 → 开发者选项\n"
-        )
+        val jTextArea = JTextArea(jsonObject.get("step").asString)
         jPanel.add(jTextArea)
         jTextArea.isEditable = false
         jTextArea.setBounds(5, 0, 350, 184)
 
-        val jButton = Button("已按步骤完成", 10, 200, 310, 50)
+        val jButton = Button(jsonObject.get("step_done").asString, 10, 200, 310, 50)
         jButton.addActionListener {
             ControlCenter.getInstance().controlListener.onConfirmConnection()
             dispose()
@@ -52,9 +42,14 @@ class ADBWiredWindow : JFrame("USB有线连接") {
     }
 }
 
-class ADBWirelessWindow : JFrame("通过WiFi使用TCP/IP连接") {
+class ADBWirelessWindow : JFrame() {
+    var jsonObject: JsonObject
+
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
+        jsonObject = DecodeLanguagePack.getInstance().getWindowStrings("ADBWirelessWindow")
+
+        title = jsonObject.get("title").asString
         setSize(350, 300)
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
         defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
@@ -67,33 +62,36 @@ class ADBWirelessWindow : JFrame("通过WiFi使用TCP/IP连接") {
         jPanel.layout = null
         jPanel.setSize(350, 300)
 
+        @Suppress("LocalVariableName") val ADBWirelessStepsText = jsonObject.get("steps").asJsonArray
+        @Suppress("LocalVariableName") val ADBWirelessStepsBtn = jsonObject.get("steps_btn").asJsonArray
+
         var page = 0
-        val jTextArea = JTextArea(ADBWirelessStepsText[0])
+        val jTextArea = JTextArea(ADBWirelessStepsBtn[0].toString())
         jPanel.add(jTextArea)
         jTextArea.isEditable = false
         jTextArea.setBounds(5, 0, 350, 150)
 
         // IP 抓取 adb shell ip route list table 0 | grep "local 192.168."
         // 跳转wifi adb shell am start com.android.settings/.wifi.WifiPickerActivity
-        val jButton = Button(ADBWirelessStepsBtn[0], 10, 200, 310, 50)
+        val jButton = Button(ADBWirelessStepsBtn[0].toString(), 10, 200, 310, 50)
         jPanel.add(jButton)
         jButton.addActionListener {
             page++
-            jTextArea.text = ADBWirelessStepsText[page]
-            jButton.text = ADBWirelessStepsBtn[page]
+            jTextArea.text = ADBWirelessStepsText[page].asString
+            jButton.text = ADBWirelessStepsBtn[page].toString()
             when (page) {
                 1 -> {
                     val list =
                         runAdbGetList("shell am start com.android.settings/.wifi.WifiPickerActivity")
                     if (list.contains("exception") || list.contains("error")) {
-                        jTextArea.text = "失败, 请手动打开并设置"
+                        jTextArea.text = jsonObject.get("connect_fail").asString
                         return@addActionListener
                     }
-                    jTextArea.append("完成")
+                    jTextArea.append(jsonObject.get("succeed").asString)
                 }
                 2 -> {
                     runAdb("tcpip 5555")
-                    jTextArea.append("完成")
+                    jTextArea.append(jsonObject.get("confirm").asString)
                 }
                 3 -> {
                     Thread {
@@ -117,25 +115,25 @@ class ADBWirelessWindow : JFrame("通过WiFi使用TCP/IP连接") {
 
                         /* 192.168.1.[0-9]{1,3} */
                         if (!ip.toString().matches("192.168.1.[0-9]{1,3}".toRegex())) {
-                            jTextArea.append("获取失败, 请手动输入\n")
+                            jTextArea.append(jsonObject.get("fetch_fail").asString)
                             val jTextField = JTextField()
                             jPanel.add(jTextField)
                             jTextField.setBounds(5, 150, 250, 25)
 
-                            val confirm = Button("确定", 255, 150, 70, 25)
+                            val confirm = Button(jsonObject.get("confirm").asString, 255, 150, 70, 25)
                             jPanel.add(confirm)
                             confirm.isVisible = false
                             confirm.addActionListener {
                                 ip.clear()
                                 ip.append(jTextField.text)
-                                jTextArea.append("输入的IP为: $ip\n")
+                                jTextArea.append(String.format(jsonObject.get("ip_input").asString, ip))
                                 connectToIp(ip.toString(), jTextArea)
                                 confirm.isVisible = false
                                 jTextField.isVisible = false
                             }
                             confirm.isVisible = true
                         } else {
-                            jTextArea.append("获取成功: $ip\n")
+                            jTextArea.append(String.format(jsonObject.get("fetch_succeed").asString, ip))
                             connectToIp(ip.toString(), jTextArea)
                         }
                     }.start()
@@ -151,10 +149,9 @@ class ADBWirelessWindow : JFrame("通过WiFi使用TCP/IP连接") {
 
     private fun connectToIp(ip: String, jTextArea: JTextArea) {
         if (runAdbGetText("connect $ip:5555").contains("connected")) {
-            jTextArea.append("与设备利用局域网连接成功")
+            jTextArea.append(jsonObject.get("connect_succeed").asString)
         } else {
-            jTextArea.append("请尝试使用adb手动连接, 命令如下:\nadb connect $ip:5555")
+            jTextArea.append(String.format(jsonObject.get("fetch_failed").asString, ip))
         }
     }
-
 }

@@ -5,6 +5,7 @@ import com.skynight.scrcpy.ControlListener
 
 class ControlCenter private constructor() {
 
+    @Volatile
     @set:Synchronized
     lateinit var controlListener: ControlListener
 

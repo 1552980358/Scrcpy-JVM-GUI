@@ -2,6 +2,7 @@ package com.skynight.scrcpy
 
 import com.skynight.scrcpy.Base.ControlCenter
 import com.skynight.scrcpy.Base.BaseIndex.Companion.PackageFileList
+import com.skynight.scrcpy.Base.DecodeLanguagePack
 import com.skynight.scrcpy.Base.exitButton
 import java.awt.Color
 import java.awt.Toolkit
@@ -9,15 +10,17 @@ import java.io.File
 import javax.swing.JPanel
 import javax.swing.*
 
-class SplashWindow : JFrame("启动中, 请稍后...") {
+class SplashWindow : JFrame() {
 
     init {
+        val jsonObject = DecodeLanguagePack.getInstance().getWindowStrings("SplashWindow")
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
         setSize(300, 120)
         setLocation((screenSize.width - 300) / 2, (screenSize.height - 120) / 2)
         defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
         isVisible = true
+        title = jsonObject.get("title").asString
         val panel = JPanel()
         add(panel)
         panel.background = Color.WHITE
@@ -25,7 +28,7 @@ class SplashWindow : JFrame("启动中, 请稍后...") {
         panel.isVisible = false
         panel.setSize(300, 100)
 
-        val content = JLabel("检查文件包...", JLabel.CENTER)
+        val content = JLabel(jsonObject.get("check_file").asString, JLabel.CENTER)
         content.setBounds(0, 0, 300, 15)
         panel.add(content)
         panel.isVisible = true
@@ -33,7 +36,7 @@ class SplashWindow : JFrame("启动中, 请稍后...") {
         Thread {
 
             if (!checkFiles()) {
-                content.text = "文件包检查失败!详细请查看弹窗!"
+                content.text = jsonObject.get("check_file_fail").asString
                 exitButton(this, panel)
                 return@Thread
             }
@@ -50,7 +53,6 @@ class SplashWindow : JFrame("启动中, 请稍后...") {
             val file = File(dir + i)
             println(file.toString())
             if (!file.exists()) {
-                //println("此文件无法找到, 请检查是否存在：\n$file")
                 return false
             }
         }

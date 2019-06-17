@@ -7,7 +7,7 @@ import java.awt.Color
 import java.awt.Toolkit
 import javax.swing.*
 
-class ControlKeyWindow private constructor(): JFrame("Ê³ÓÃÖ¸ÄÏ") {
+class ControlKeyWindow private constructor(): JFrame("é£Ÿç”¨å°æç¤º") {
     companion object {
         private var instance: ControlKeyWindow? = null
         @Synchronized
@@ -52,9 +52,9 @@ class ControlKeyWindow private constructor(): JFrame("Ê³ÓÃÖ¸ÄÏ") {
 
         jMenuBar.background = Color.WHITE
 
-        val shutdown = JMenu("¹Ø»ú")
+        val shutdown = JMenu("å…³æœº")
         jMenuBar.add(shutdown)
-        val reboot = JMenu("ÖØÆô")
+        val reboot = JMenu("é‡å¯")
         jMenuBar.add(reboot)
     }
 
