@@ -4,7 +4,7 @@ import com.skynight.scrcpy.widgets.CheckBox
 import java.awt.Toolkit
 import javax.swing.JFrame
 
-class ConnectionSelectDevice(list: List<String>): JFrame("选择设备") {
+class SelectDeviceWindow(list: List<String>): JFrame("选择设备") {
     private val CheckBoxList = mutableListOf<CheckBox>()
 
     init {

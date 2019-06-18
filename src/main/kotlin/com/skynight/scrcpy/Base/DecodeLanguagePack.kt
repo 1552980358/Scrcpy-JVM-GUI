@@ -26,8 +26,8 @@ class DecodeLanguagePack private constructor(){
         languageList = file.list().toMutableList()
     }
 
-    fun setLocale(region: String = "zh", language: String = "rCN"): DecodeLanguagePack {
-        return setLocale("$region-$language")
+    fun setLocale(language: String = "zh", region: String = "rCN"): DecodeLanguagePack {
+        return setLocale("$language-$region")
     }
     fun setLocale(locale: String = "zh-rCN"): DecodeLanguagePack {
         this.locale = locale

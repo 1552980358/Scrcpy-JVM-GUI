@@ -14,8 +14,8 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
     //SplashWindow()
     //ADBWirelessWindow()
     //ADBWiredWindow()
-    TestConnectionWindow()
-    //MainWindow()
+    //TestConnectionWindow()
+    MainWindow()
 
     /*
     ControlCenter.getInstance().controlListener = object : ControlListener {

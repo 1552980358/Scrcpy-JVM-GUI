@@ -29,12 +29,17 @@ import javax.swing.ButtonGroup
 import javax.swing.KeyStroke
 import javax.swing.BorderFactory
 
-class MainWindow : JFrame(/*"Scrcpy - JVM GUI"*/) {
+class MainWindow : JFrame() {
     private var bitRate = 0
     private val customBitRate = JTextField(3)
     @Suppress("PrivatePropertyName")
     private val CheckBoxes = mutableListOf<CheckBox>()
     private var jsonObject: JsonObject
+    private val panelList = mutableMapOf<String, Panel>()
+    private val mainPanel: JPanel
+    private lateinit var deviceInfoPanel: Panel
+    private lateinit var cardLayout: CardLayout
+    private val DevicesMenu = mutableListOf<JMenuItem>()
 
     init {
         Thread {
@@ -53,25 +58,22 @@ class MainWindow : JFrame(/*"Scrcpy - JVM GUI"*/) {
         title = jsonObject.get("title").asString
         setSize(750, 350)
         isResizable = false
-        setMenu()
+        Thread { setMenu() }.start()
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         isVisible = false
         iconImage = ImageIcon("icons/MainFrame.jpg").image
 
-        val jPanel = JPanel()
-        add(jPanel)
-        contentPane = jPanel
-        jPanel.background = Color.WHITE
-        jPanel.isVisible = false
-        jPanel.layout = null
-        jPanel.setSize(750, 350)
+        mainPanel = Panel(width, height, null)
+        add(mainPanel)
+        contentPane = mainPanel
+        mainPanel.isVisible = false
 
-        Thread { setBitRate(jPanel) }.start()
-        Thread { setTools(jPanel)}.start()
-        Thread { getDeviceInfo(jPanel) }.start()
+        Thread { setBitRate() }.start()
+        Thread { setTools()}.start()
+        Thread { getDeviceInfo() }.start()
 
-        jPanel.isVisible = true
+        mainPanel.isVisible = true
     }
 
     private fun setMenu() {
@@ -84,11 +86,32 @@ class MainWindow : JFrame(/*"Scrcpy - JVM GUI"*/) {
         val about = JMenu(menuObject.get("about").asString)
         jMenuBar.add(about)
         about.setMnemonic('c')
-        val device = JMenu(menuObject.get("devices").asString)
-        val busying = JMenuItem(if (ControlCenter.getInstance().isWiredMethod) menuObject.get("wired").asString else menuObject.get("wireless").asString)
-        busying.background = Color.WHITE
-        device.add(busying)
-        jMenuBar.add(device)
+
+        val deviceJMenu = JMenu(menuObject.get("devices").asString)
+        jMenuBar.add(deviceJMenu)
+        val refresh = JMenuItem("刷新")
+        deviceJMenu.add(refresh)
+        refresh.background = Color.WHITE
+        refresh.addActionListener {
+            Thread {
+                GetConnectedDevices.reloadConnectedDevices()
+                mainPanel.remove(deviceInfoPanel)
+
+                Thread { getDeviceInfo() }.start()
+
+                Thread {
+                    for (i in DevicesMenu) {
+                        deviceJMenu.remove(i)
+                    }
+                    addDevicesToMenu(deviceJMenu)
+                }.start()
+            }.start()
+        }
+        try {
+            addDevicesToMenu(deviceJMenu)
+        } catch (e: Exception) {
+            //
+        }
 
         val connect = JMenu(menuObject.get("scrcpy").asString)
         jMenuBar.add(connect)
@@ -102,6 +125,20 @@ class MainWindow : JFrame(/*"Scrcpy - JVM GUI"*/) {
         connect.add(connectDevices)
         connectDevice.addActionListener {
             onConnect()
+        }
+    }
+
+    private fun addDevicesToMenu(deviceJMenu: JMenu) {
+        DevicesMenu.clear()
+        val getConnectedDevices = GetConnectedDevices.getInstance()
+        for (i in getConnectedDevices.getDeviceList()) {
+            val jMenuItem = JMenuItem(getConnectedDevices.getDeviceModel(i))
+            jMenuItem.background = Color.WHITE
+            jMenuItem.addActionListener {
+                cardLayout.show(deviceInfoPanel, i)
+            }
+            DevicesMenu.add(jMenuItem)
+            deviceJMenu.add(jMenuItem)
         }
     }
 
@@ -160,20 +197,23 @@ class MainWindow : JFrame(/*"Scrcpy - JVM GUI"*/) {
         }
         command.add(bitrate)
 
-        println(command)
-
         Runtime.getRuntime().exec(command.toTypedArray())
 
         ControlKeyWindow.getInstance().showFrame()
     }
 
-    private fun getDeviceInfo(mainPanel: JPanel) {
+    private fun getDeviceInfo() {
         val deviceInfo = jsonObject.get("DeviceInfo").asJsonObject
-
-        val cardLayout = CardLayout()
-        val jPanel = Panel(0, 0, width / 3, height - 64, cardLayout)
-        mainPanel.add(jPanel)
-        jPanel.border = BorderFactory.createTitledBorder(deviceInfo.get("title").asString)
+        try {
+            mainPanel.remove(deviceInfoPanel)
+            panelList.clear()
+        } catch (e: Exception) {
+            //
+        }
+        cardLayout = CardLayout()
+        deviceInfoPanel = Panel(0, 0, width / 3, height - 64, cardLayout)
+        mainPanel.add(deviceInfoPanel)
+        deviceInfoPanel.border = BorderFactory.createTitledBorder(deviceInfo.get("title").asString)
 
         val getConnectedDevices = GetConnectedDevices.getInstance()
         for (i in getConnectedDevices.getDeviceList()) {
@@ -253,12 +293,14 @@ class MainWindow : JFrame(/*"Scrcpy - JVM GUI"*/) {
             type.add(JLabel(if (ControlCenter.getInstance().isWiredMethod) deviceInfo.get("wired").asString else deviceInfo.get("wireless").asString))
             subPanel.add(type)
 
-            jPanel.add(subPanel)
+            panelList[i] = subPanel
+
+            deviceInfoPanel.add(subPanel, i)
         }
     }
 
-    private fun setBitRate(mainPanel: JPanel) {
-        val BitRate = jsonObject.get("BitRate").asJsonObject
+    private fun setBitRate() {
+        @Suppress("LocalVariableName") val BitRate = jsonObject.get("BitRate").asJsonObject
         val jPanel = JPanel()
         jPanel.border = BorderFactory.createTitledBorder(BitRate.get("title").asString)
         mainPanel.add(jPanel)
@@ -331,7 +373,7 @@ class MainWindow : JFrame(/*"Scrcpy - JVM GUI"*/) {
         bitRatePanel3.isVisible = true
     }
 
-    private fun setTools(mainPanel: JPanel) {
+    private fun setTools() {
         val tools = jsonObject.get("Tools").asJsonObject
         val jPanel = JPanel()
         jPanel.border = BorderFactory.createTitledBorder(tools.get("title").asString)
