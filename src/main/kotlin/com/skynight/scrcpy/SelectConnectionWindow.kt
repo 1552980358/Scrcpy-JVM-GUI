@@ -5,53 +5,58 @@ import com.skynight.scrcpy.widgets.Button
 import com.skynight.scrcpy.widgets.Panel
 import com.skynight.scrcpy.widgets.RadioButton
 import java.awt.Toolkit
+import java.awt.event.ComponentEvent
+import java.awt.event.ComponentListener
 import javax.swing.*
 
 class SelectConnectionWindow: JFrame("选择连接方式") {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
-        setSize(300, 230)
+        setSize(300, 160)
         isResizable = false
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
         defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
+        isAlwaysOnTop = true
+        addComponentListener(object : ComponentListener {
+            override fun componentMoved(e: ComponentEvent?) {
+                setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
+            }
 
-        val jPanel = Panel(300, 200, null)
+            override fun componentResized(e: ComponentEvent?) {
+
+            }
+
+            override fun componentHidden(e: ComponentEvent?) {
+            }
+
+            override fun componentShown(e: ComponentEvent?) {
+
+            }
+
+        })
+
+        val jPanel = Panel(width, height, null)
         add(jPanel)
 
-        val singleDevice = Panel(0, 0, 300, 60)
-        jPanel.add(singleDevice)
-        singleDevice.border = BorderFactory.createTitledBorder("~ 单设备 ~")
         val buttonGroup = ButtonGroup()
-        val singleWired = RadioButton("有线连接")
-        buttonGroup.add(singleWired)
-        singleDevice.add(singleWired)
-        singleWired.isSelected = true
-        val singleWireless = RadioButton("无线连接")
-        buttonGroup.add(singleWireless)
-        singleDevice.add(singleWireless)
+        val wired = RadioButton("有线连接")
+        buttonGroup.add(wired)
+        jPanel.add(wired)
+        wired.isSelected = true
+        wired.setBounds(0,10, 284, 30)
+        wired.horizontalAlignment = JRadioButton.CENTER
+        val wireless = RadioButton("无线连接")
+        buttonGroup.add(wireless)
+        jPanel.add(wireless)
+        wireless.horizontalAlignment = JRadioButton.CENTER
+        wireless.setBounds(0,40, 284, 30)
 
-        val multiDevice = Panel(0,60,300,90)
-        jPanel.add(multiDevice)
-        multiDevice.border = BorderFactory.createTitledBorder("~ 多设备 ~")
-        val multiWired = RadioButton("有线连接(施工未开放)")
-        buttonGroup.add(multiWired)
-        multiDevice.add(multiWired)
-
-        val multiWireless = RadioButton("无线连接(施工未开放)")
-        buttonGroup.add(multiWireless)
-        multiDevice.add(multiWireless)
-        multiWireless.addItemListener {
-            buttonGroup.clearSelection()
-        }
-        multiWired.addItemListener {
-            buttonGroup.clearSelection()
-        }
-        val jButton = Button("确定", 10,150, 264, 40)
+        val jButton = Button("确定", 10,70, 264, 40)
         jPanel.add(jButton)
         jButton.addActionListener {
             val controlCenter = ControlCenter.getInstance()
-            controlCenter.isWiredMethod = singleWired.isSelected
+            controlCenter.isWiredMethod = wired.isSelected
             controlCenter.controlListener.onHandleConnectionMethod()
             dispose()
         }

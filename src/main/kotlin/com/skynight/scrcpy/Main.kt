@@ -15,9 +15,10 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
     //ADBWirelessWindow()
     //ADBWiredWindow()
     //TestConnectionWindow()
-    MainWindow()
+    //MainWindow()
+    //SelectDeviceWindow(false)
 
-    /*
+    //*
     ControlCenter.getInstance().controlListener = object : ControlListener {
         override fun passFileCheck() {
             super.passFileCheck()
@@ -43,13 +44,13 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
         override fun passAdbCheck() {
             super.passAdbCheck()
             println("passAdbCheck")
-            MainWindow()
+            MainWindow.getInstance()
         }
     }
 
     // 启动
     SplashWindow()
-    */
+    //*/
 }
 
 interface ControlListener {

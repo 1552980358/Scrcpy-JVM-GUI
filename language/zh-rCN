@@ -10,11 +10,11 @@
 		"Menu": {
 			"about": "关于",
 			"devices": "设备",
-			"wired": "USB有线连接",
-			"wireless": "TCP/IP无线桥接",
+            "refresh": "刷新",
+            "newConnection": "连接新设备",
 			"scrcpy": "开始投屏",
 			"single": "单设备投屏",
-			"multi": "多设备同时投屏(施工未开放)"
+			"multi": "多设备同时投屏"
 		},
 		"DeviceInfo": {
 			"title": "~ 设备信息 ~",
@@ -90,13 +90,9 @@
 	},
 
 	"SelectConnectionWindow": {
-		"title": "选择连接方式",
-		"single": "~ 单设备 ~",
+		"title": "设备连接向导",
 		"single_wireless": "有线连接",
 		"single_wired": "无线连接",
-		"multi": "~ 多设备 ~",
-		"multi_wired": "有线连接(施工未开放)",
-		"multi_wireless": "无线连接(施工未开放)",
 		"confiem": "确定"
 	},
 

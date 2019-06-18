@@ -1,13 +1,11 @@
 package com.skynight.scrcpy
 
 import com.google.gson.JsonObject
-import com.skynight.scrcpy.Base.ControlCenter
 import com.skynight.scrcpy.Base.BaseIndex.Companion.PackageFileList
 import com.skynight.scrcpy.Base.BaseIndex.Companion.WidgetWithTextHeight
 import com.skynight.scrcpy.Base.BaseIndex.Companion.BitRateList
 import com.skynight.scrcpy.Base.DecodeLanguagePack
 import com.skynight.scrcpy.Base.GetConnectedDevices
-import com.skynight.scrcpy.Base.runAdbGetList
 import com.skynight.scrcpy.widgets.CheckBox
 import com.skynight.scrcpy.widgets.Panel
 import com.skynight.scrcpy.widgets.RadioButton
@@ -15,6 +13,8 @@ import java.awt.CardLayout
 import java.awt.Color
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
+import java.awt.event.ComponentEvent
+import java.awt.event.ComponentListener
 import java.awt.event.KeyEvent
 import java.io.File
 import javax.swing.JFrame
@@ -28,6 +28,8 @@ import javax.swing.ImageIcon
 import javax.swing.ButtonGroup
 import javax.swing.KeyStroke
 import javax.swing.BorderFactory
+import javax.swing.event.MenuEvent
+import javax.swing.event.MenuListener
 
 class MainWindow : JFrame() {
     private var bitRate = 0
@@ -39,12 +41,36 @@ class MainWindow : JFrame() {
     private val mainPanel: JPanel
     private lateinit var deviceInfoPanel: Panel
     private lateinit var cardLayout: CardLayout
+    @Suppress("PrivatePropertyName")
     private val DevicesMenu = mutableListOf<JMenuItem>()
+
+    companion object {
+        var created = false
+        fun isCreated(): Boolean {
+            return created
+        }
+        @Volatile
+        private var instance: MainWindow? = null
+        @Synchronized
+        fun getInstance(): MainWindow {
+            if (instance == null) {
+                created = true
+                instance = MainWindow()
+            }
+            return instance as MainWindow
+        }
+    }
+
+    override fun setVisible(b: Boolean) {
+        if (!isVisible) {
+            super.setVisible(b)
+        }
+    }
 
     init {
         Thread {
             try {
-                Thread.sleep(3200)
+                Thread.sleep(3000)
             } catch (e: Exception) {
 
             }
@@ -70,7 +96,7 @@ class MainWindow : JFrame() {
         mainPanel.isVisible = false
 
         Thread { setBitRate() }.start()
-        Thread { setTools()}.start()
+        Thread { setTools() }.start()
         Thread { getDeviceInfo() }.start()
 
         mainPanel.isVisible = true
@@ -85,12 +111,14 @@ class MainWindow : JFrame() {
 
         val about = JMenu(menuObject.get("about").asString)
         jMenuBar.add(about)
-        about.setMnemonic('c')
+        about.setMnemonic('A')
 
         val deviceJMenu = JMenu(menuObject.get("devices").asString)
+        deviceJMenu.mnemonic = KeyEvent.VK_D
         jMenuBar.add(deviceJMenu)
-        val refresh = JMenuItem("刷新")
+        val refresh = JMenuItem(menuObject.get("refresh").asString)
         deviceJMenu.add(refresh)
+        refresh.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.SHIFT_MASK)
         refresh.background = Color.WHITE
         refresh.addActionListener {
             Thread {
@@ -113,36 +141,51 @@ class MainWindow : JFrame() {
             //
         }
 
+        val connectNewDevice = JMenu(menuObject.get("newConnection").asString)
+        connectNewDevice.mnemonic = KeyEvent.VK_N
+        jMenuBar.add(connectNewDevice)
+        connectNewDevice.addMenuListener(object : MenuListener {
+            override fun menuSelected(e: MenuEvent?) {
+                SelectConnectionWindow()
+            }
+
+            override fun menuCanceled(e: MenuEvent?) {
+            }
+
+            override fun menuDeselected(e: MenuEvent?) {
+            }
+
+        })
+
+
         val connect = JMenu(menuObject.get("scrcpy").asString)
         jMenuBar.add(connect)
+        connect.mnemonic = KeyEvent.VK_S
         val connectDevice = JMenuItem(menuObject.get("single").asString)
-        connectDevice.setMnemonic('C')
-        connectDevice.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.SHIFT_MASK)
+        connectDevice.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.SHIFT_MASK)
         connectDevice.background = Color.WHITE
         val connectDevices = JMenuItem(menuObject.get("multi").asString)
+        connectDevices.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.SHIFT_MASK)
         connectDevices.background = Color.WHITE
         connect.add(connectDevice)
         connect.add(connectDevices)
         connectDevice.addActionListener {
-            onConnect()
+            //onConnect()
+            Thread {
+                SelectDeviceWindow(onConnect())
+                ControlKeyWindow.getInstance().showFrame()
+            }.start()
+        }
+        connectDevices.addActionListener {
+            Thread {
+                SelectDeviceWindow(onConnect(), false)
+                ControlKeyWindow.getInstance().showFrame()
+            }.start()
         }
     }
 
-    private fun addDevicesToMenu(deviceJMenu: JMenu) {
-        DevicesMenu.clear()
-        val getConnectedDevices = GetConnectedDevices.getInstance()
-        for (i in getConnectedDevices.getDeviceList()) {
-            val jMenuItem = JMenuItem(getConnectedDevices.getDeviceModel(i))
-            jMenuItem.background = Color.WHITE
-            jMenuItem.addActionListener {
-                cardLayout.show(deviceInfoPanel, i)
-            }
-            DevicesMenu.add(jMenuItem)
-            deviceJMenu.add(jMenuItem)
-        }
-    }
+    private fun onConnect(): MutableList<String> {
 
-    private fun onConnect() {
         val command = mutableListOf(
             "cmd.exe",
             "/c",
@@ -151,38 +194,6 @@ class MainWindow : JFrame() {
             "/c",
             System.getProperty("user.dir") + File.separator + PackageFileList[6]
         )
-        val adbDevicesRes = runAdbGetList("devices")
-
-        //GetConnectedDevices()
-
-        val adbDevices = mutableListOf<String>()
-        for (i: Int in 1 until adbDevicesRes.size - 1) {
-            val device = StringBuilder()
-            for (j in adbDevicesRes[i]) {
-                if (j.toString() == "\t") {
-                    break
-                }
-                device.append(j)
-            }
-            adbDevices.add(device.toString())
-        }
-
-        if (adbDevices.size > 1) {
-            command.add("-s")
-            val device = if (!ControlCenter.getInstance().isWiredMethod) {
-                var j = ""
-                searchDevice@ for (i in adbDevices) {
-                    if (i.contains("192.168")) {
-                        j = i
-                        break@searchDevice
-                    }
-                }
-                j
-            } else {
-                adbDevices[1]
-            }
-            command.add(device)
-        }
 
         for (i in CheckBoxes) {
             command.add(i.getArg())
@@ -197,9 +208,21 @@ class MainWindow : JFrame() {
         }
         command.add(bitrate)
 
-        Runtime.getRuntime().exec(command.toTypedArray())
+        return command
+    }
 
-        ControlKeyWindow.getInstance().showFrame()
+    private fun addDevicesToMenu(deviceJMenu: JMenu) {
+        DevicesMenu.clear()
+        val getConnectedDevices = GetConnectedDevices.getInstance()
+        for (i in getConnectedDevices.getDeviceList()) {
+            val jMenuItem = JMenuItem(getConnectedDevices.getDeviceModel(i))
+            jMenuItem.background = Color.WHITE
+            jMenuItem.addActionListener {
+                cardLayout.show(deviceInfoPanel, i)
+            }
+            DevicesMenu.add(jMenuItem)
+            deviceJMenu.add(jMenuItem)
+        }
     }
 
     private fun getDeviceInfo() {
@@ -218,8 +241,8 @@ class MainWindow : JFrame() {
         val getConnectedDevices = GetConnectedDevices.getInstance()
         for (i in getConnectedDevices.getDeviceList()) {
 
-            val subPanel = Panel(0,0,width / 3 - 16,100, null)
-            val b = Panel(0, 0, width /3, 25)
+            val subPanel = Panel(0, 0, width / 3 - 16, 100, null)
+            val b = Panel(0, 0, width / 3, 25)
             b.add(JLabel(deviceInfo.get("brand").asString))
             b.add(JLabel(getConnectedDevices.getDeviceBrand(i)))
             subPanel.add(b)
@@ -234,13 +257,13 @@ class MainWindow : JFrame() {
             a.add(JLabel(getConnectedDevices.getDeviceAndroidVersion(i)))
             subPanel.add(a)
 
-            val s = Panel(0, 75,width / 3 - 16, 25)
+            val s = Panel(0, 75, width / 3 - 16, 25)
             s.add(JLabel("SDK: "))
             s.add(JLabel(getConnectedDevices.getDeviceSDK(i)))
             subPanel.add(s)
 
             val imei = StringBuilder(getConnectedDevices.getDeviceImei(i))
-            for (j:Int in 0 .. imei.lastIndex) {
+            for (j: Int in 0..imei.lastIndex) {
                 if (j >= imei.lastIndex / 2 - imei.lastIndex / 4 && j <= imei.lastIndex / 2 + imei.lastIndex / 4) {
                     imei[j] = '*'
                 }
@@ -290,7 +313,15 @@ class MainWindow : JFrame() {
 
             val type = Panel(0, 175, width / 3 - 16, 25)
             type.add(JLabel(deviceInfo.get("type").asString))
-            type.add(JLabel(if (ControlCenter.getInstance().isWiredMethod) deviceInfo.get("wired").asString else deviceInfo.get("wireless").asString))
+            type.add(
+                JLabel(
+                    (if (!i.startsWith("192.168"))
+                        deviceInfo.get("wired")
+                    else deviceInfo.get(
+                        "wireless"
+                    )).asString
+                )
+            )
             subPanel.add(type)
 
             panelList[i] = subPanel

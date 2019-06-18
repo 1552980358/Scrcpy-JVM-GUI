@@ -6,21 +6,42 @@ import com.skynight.scrcpy.Base.checkAdbConnect
 import com.skynight.scrcpy.Base.exitButton
 import java.awt.Color
 import java.awt.Toolkit
+import java.awt.event.ComponentEvent
+import java.awt.event.ComponentListener
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JProgressBar
 
-class TestConnectionWindow : JFrame("启动中, 请稍后...") {
+class TestConnectionWindow : JFrame() {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
         val jsonObject = DecodeLanguagePack.getInstance().getWindowStrings("TestConnectionWindow")
 
         title = jsonObject.get("title").asString
         setSize(300, 120)
+        isAlwaysOnTop = true
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
         defaultCloseOperation = DISPOSE_ON_CLOSE
         isVisible = true
+        addComponentListener(object : ComponentListener {
+            override fun componentMoved(e: ComponentEvent?) {
+                setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
+            }
+
+            override fun componentResized(e: ComponentEvent?) {
+
+            }
+
+            override fun componentHidden(e: ComponentEvent?) {
+            }
+
+            override fun componentShown(e: ComponentEvent?) {
+
+            }
+
+        })
+
         val panel = JPanel()
         add(panel)
         panel.background = Color.WHITE

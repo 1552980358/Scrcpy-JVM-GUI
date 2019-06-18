@@ -23,7 +23,7 @@ class ControlKeyWindow private constructor(): JFrame("食用小提示") {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
         setSize(500, 515)
         defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
-        setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
+        setLocation(0, (screenSize.height - height) / 2)
         val jPanel = Panel(width, height, null)
         add(jPanel)
 

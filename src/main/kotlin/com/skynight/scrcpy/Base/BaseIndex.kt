@@ -4,7 +4,8 @@ import java.io.File
 
 class BaseIndex {
     companion object {
-        const val WidgetWithTextHeight = 27
+        const val WidgetWithTextHeight = 26
+        const val PanelMarginRight = 16
 
         val PackageFileList = arrayListOf(
             "package${File.separator}adb.exe",
@@ -52,7 +53,7 @@ class BaseIndex {
             "设备剪贴板复制到计算机",
             "粘贴计算机剪贴板到设备",
             "将计算机剪贴板复制到设备",
-            "打开/关闭FPS计算(于控制台)"
+            "打开/关闭FPS计算"
         )
         @JvmField val ControlKeyList = mapOf(
             ControlKeyFunctionList[0] to "Ctrl + f",

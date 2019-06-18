@@ -6,6 +6,8 @@ import com.skynight.scrcpy.Base.DecodeLanguagePack
 import com.skynight.scrcpy.Base.exitButton
 import java.awt.Color
 import java.awt.Toolkit
+import java.awt.event.ComponentEvent
+import java.awt.event.ComponentListener
 import java.io.File
 import javax.swing.JPanel
 import javax.swing.*
@@ -21,6 +23,24 @@ class SplashWindow : JFrame() {
         defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
         isVisible = true
         title = jsonObject.get("title").asString
+        addComponentListener(object : ComponentListener {
+            override fun componentMoved(e: ComponentEvent?) {
+                setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
+            }
+
+            override fun componentResized(e: ComponentEvent?) {
+
+            }
+
+            override fun componentHidden(e: ComponentEvent?) {
+            }
+
+            override fun componentShown(e: ComponentEvent?) {
+
+            }
+
+        })
+
         val panel = JPanel()
         add(panel)
         panel.background = Color.WHITE

@@ -5,6 +5,8 @@ import com.skynight.scrcpy.Base.*
 import com.skynight.scrcpy.widgets.Button
 import java.awt.Color
 import java.awt.Toolkit
+import java.awt.event.ComponentEvent
+import java.awt.event.ComponentListener
 import java.lang.StringBuilder
 import javax.swing.*
 
@@ -16,9 +18,28 @@ class ADBWiredWindow : JFrame() {
 
         title = jsonObject.get("title").asString
         setSize(350, 300)
+        isAlwaysOnTop = true
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
         defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
         isVisible = true
+
+        addComponentListener(object : ComponentListener {
+            override fun componentMoved(e: ComponentEvent?) {
+                setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
+            }
+
+            override fun componentResized(e: ComponentEvent?) {
+
+            }
+
+            override fun componentHidden(e: ComponentEvent?) {
+            }
+
+            override fun componentShown(e: ComponentEvent?) {
+
+            }
+
+        })
 
         val jPanel = JPanel()
         add(jPanel)
@@ -33,7 +54,9 @@ class ADBWiredWindow : JFrame() {
 
         val jButton = Button(jsonObject.get("step_done").asString, 10, 200, 310, 50)
         jButton.addActionListener {
-            ControlCenter.getInstance().controlListener.onConfirmConnection()
+            if (!MainWindow.isCreated()){
+                ControlCenter.getInstance().controlListener.onConfirmConnection()
+            }
             dispose()
         }
         jPanel.add(jButton)
@@ -139,7 +162,9 @@ class ADBWirelessWindow : JFrame() {
                     }.start()
                 }
                 5 -> {
-                    ControlCenter.getInstance().controlListener.onConfirmConnection()
+                    if (!MainWindow.isCreated()){
+                        ControlCenter.getInstance().controlListener.onConfirmConnection()
+                    }
                     dispose()
                 }
             }
