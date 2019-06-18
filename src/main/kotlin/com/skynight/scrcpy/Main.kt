@@ -2,15 +2,13 @@ package com.skynight.scrcpy
 
 import com.skynight.scrcpy.Base.ControlCenter
 import com.skynight.scrcpy.Base.DecodeLanguagePack
-import com.skynight.scrcpy.Base.GetConnectedDevices
-import java.io.File
-import java.io.FileWriter
 
 fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
     //test()
 
+
+    /* Unit Test */
     DecodeLanguagePack.getInstance().setLocale().decode()
-    /* Test Step */
     //SplashWindow()
     //ADBWirelessWindow()
     //ADBWiredWindow()
@@ -76,6 +74,14 @@ interface ControlListener {
 /* Test Program Fun */
 @Suppress("unused")
 fun test() {
+/*
+    val path = System.getProperty("user.dir") + File.separator + "package"
+    for (i in File(path).list()) {
+        val f = File(path + File.separator + i)
+        println(f.path)
+        println(DigestUtils.md5Hex(FileInputStream(f)))
+    }
+*/
     /*
     if (SystemTray.isSupported()) {
         val systemTray = SystemTray.getSystemTray()
@@ -105,9 +111,11 @@ fun test() {
         println(GetConnectedDevices.getInstance().getDeviceImei(i))
     }
 */
+    /*
     val file = File(System.getProperty("user.dir") + File.separator + DecodeLanguagePack.path)
     for (i in file.list()) {
         println(i)
     }
 
+     */
 }

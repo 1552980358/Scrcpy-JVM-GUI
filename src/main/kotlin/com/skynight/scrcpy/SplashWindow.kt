@@ -2,13 +2,16 @@ package com.skynight.scrcpy
 
 import com.skynight.scrcpy.Base.ControlCenter
 import com.skynight.scrcpy.Base.BaseIndex.Companion.PackageFileList
+import com.skynight.scrcpy.Base.BaseIndex.Companion.PackageFilesMD5
 import com.skynight.scrcpy.Base.DecodeLanguagePack
 import com.skynight.scrcpy.Base.exitButton
+import org.apache.commons.codec.digest.DigestUtils
 import java.awt.Color
 import java.awt.Toolkit
 import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener
 import java.io.File
+import java.io.FileInputStream
 import javax.swing.JPanel
 import javax.swing.*
 
@@ -49,7 +52,7 @@ class SplashWindow : JFrame() {
         panel.setSize(300, 100)
 
         val content = JLabel(jsonObject.get("check_file").asString, JLabel.CENTER)
-        content.setBounds(0, 0, 300, 15)
+        content.setBounds(0, 0, width - 16, 15)
         panel.add(content)
         panel.isVisible = true
 
@@ -57,6 +60,14 @@ class SplashWindow : JFrame() {
 
             if (!checkFiles()) {
                 content.text = jsonObject.get("check_file_fail").asString
+                exitButton(this, panel)
+                return@Thread
+            }
+
+            content.text =jsonObject.get("check_md5").asString
+
+            if (!checkMD5Sum()) {
+                content.text = jsonObject.get("check_md5_fail").asString/*jsonObject.get("check_file_fail").asString*/
                 exitButton(this, panel)
                 return@Thread
             }
@@ -73,6 +84,17 @@ class SplashWindow : JFrame() {
             val file = File(dir + i)
             println(file.toString())
             if (!file.exists()) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun checkMD5Sum(): Boolean {
+        val dir = System.getProperty("user.dir") + File.separator
+        for (i in PackageFileList) {
+            val file = File(dir + i)
+            if (PackageFilesMD5[i] != DigestUtils.md5Hex(FileInputStream(file))) {
                 return false
             }
         }

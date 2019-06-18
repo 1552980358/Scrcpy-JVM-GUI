@@ -50,7 +50,9 @@
 	"SplashWindow": {
 		"title": "启动中, 请稍后...",
 		"check_file": "检查文件包...",
-		"check_file_fail": "文件包检查失败!"
+		"check_file_fail": "文件包检查失败!",
+		"check_md5": "检查文件MD5...",
+		"check_md5_fail": "文件MD5检查失败!"
 	},
 
 	"ADBWiredWindow": {

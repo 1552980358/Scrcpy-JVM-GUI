@@ -15,11 +15,28 @@ class BaseIndex {
             "package${File.separator}avformat-58.dll",
             "package${File.separator}avutil-56.dll",
             "package${File.separator}scrcpy.exe",
+            "package${File.separator}scrcpy-noconsole.exe",
             "package${File.separator}scrcpy-server.jar",
             "package${File.separator}SDL2.dll",
             "package${File.separator}swresample-3.dll",
             "package${File.separator}swscale-5.dll"
         )
+
+        val PackageFilesMD5 = mapOf(
+            PackageFileList[0] to "96c1a1f9ece6eee131f57117717d5990",
+            PackageFileList[1] to "ed5a809dc0024d83cbab4fb9933d598d",
+            PackageFileList[2] to "0e24119daf1909e398fa1850b6112077",
+            PackageFileList[3] to "90e5bedbf66b0beb6cf291f57d6dade3",
+            PackageFileList[4] to "34f13050e6ed8e1a5211b7edc85e8501",
+            PackageFileList[5] to "8634e07c4df856cafa40a0af7ad61d07",
+            PackageFileList[6] to "6101e65c165479a0caa0e87ae304df86",
+            PackageFileList[7] to "73188f4f4c9b518e45f050a0f3e95531",
+            PackageFileList[8] to "1ba41bc8fb734d3e31e2eef1f3077314",
+            PackageFileList[9] to "6f0469c91c605754eb64163b5f9014ad",
+            PackageFileList[10] to "addca5fa064b7b205199f8769f28e503",
+            PackageFileList[11] to "d54df450246c705ceb3286dd95dce4b2"
+        )
+
         val ScrcpyArgsList = arrayListOf(
             "-f",
             "-n",
