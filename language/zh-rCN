@@ -4,6 +4,11 @@
 	"Windows": {
 		"ControlKeyWindow": "食用小提示"
 	},
+    
+    "SelectLanguageWindow" : {
+        "title": "选择语言..."，
+        “defult”: "默认语言: zh-rCN"
+    },
 
 	"MainWindow": {
 		"title": "Scrcpy - JVM GUI",
