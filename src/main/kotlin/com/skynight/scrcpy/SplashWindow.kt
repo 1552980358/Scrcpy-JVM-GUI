@@ -1,10 +1,9 @@
 package com.skynight.scrcpy
 
-import com.skynight.scrcpy.Base.ControlCenter
-import com.skynight.scrcpy.Base.BaseIndex.Companion.PackageFileList
-import com.skynight.scrcpy.Base.BaseIndex.Companion.PackageFilesMD5
-import com.skynight.scrcpy.Base.DecodeLanguagePack
-import com.skynight.scrcpy.Base.exitButton
+import com.skynight.scrcpy.base.ControlCenter
+import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
+import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFilesMD5
+import com.skynight.scrcpy.base.exitButton
 import org.apache.commons.codec.digest.DigestUtils
 import java.awt.Color
 import java.awt.Toolkit
@@ -18,7 +17,7 @@ import javax.swing.*
 class SplashWindow : JFrame() {
 
     init {
-        val jsonObject = DecodeLanguagePack.getInstance().getWindowStrings("SplashWindow")
+        val jsonObject = ControlCenter.getInstance().getLoadLanguage().getWindowStrings("SplashWindow")
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
         setSize(300, 120)
@@ -72,7 +71,7 @@ class SplashWindow : JFrame() {
                 return@Thread
             }
 
-            ControlCenter.getInstance().controlListener.passFileCheck()
+            ControlCenter.getInstance().getControlListener().passFileCheck()
             dispose()
             return@Thread
         }.start()

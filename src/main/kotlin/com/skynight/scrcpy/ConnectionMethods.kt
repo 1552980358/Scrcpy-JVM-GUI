@@ -1,7 +1,7 @@
 package com.skynight.scrcpy
 
 import com.google.gson.JsonObject
-import com.skynight.scrcpy.Base.*
+import com.skynight.scrcpy.base.*
 import com.skynight.scrcpy.widgets.Button
 import java.awt.Color
 import java.awt.Toolkit
@@ -14,7 +14,7 @@ class ADBWiredWindow : JFrame() {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
-        val jsonObject = DecodeLanguagePack.getInstance().getWindowStrings("ADBWiredWindow")
+        val jsonObject = ControlCenter.getInstance().getLoadLanguage().getWindowStrings("ADBWiredWindow")
 
         title = jsonObject.get("title").asString
         setSize(350, 300)
@@ -55,7 +55,7 @@ class ADBWiredWindow : JFrame() {
         val jButton = Button(jsonObject.get("step_done").asString, 10, 200, 310, 50)
         jButton.addActionListener {
             if (!MainWindow.isCreated()){
-                ControlCenter.getInstance().controlListener.onConfirmConnection()
+                ControlCenter.getInstance().getControlListener().onConfirmConnection()
             }
             dispose()
         }
@@ -70,7 +70,7 @@ class ADBWirelessWindow : JFrame() {
 
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
-        jsonObject = DecodeLanguagePack.getInstance().getWindowStrings("ADBWirelessWindow")
+        jsonObject = ControlCenter.getInstance().getLoadLanguage().getWindowStrings("ADBWirelessWindow")
 
         title = jsonObject.get("title").asString
         setSize(350, 300)
@@ -163,7 +163,7 @@ class ADBWirelessWindow : JFrame() {
                 }
                 5 -> {
                     if (!MainWindow.isCreated()){
-                        ControlCenter.getInstance().controlListener.onConfirmConnection()
+                        ControlCenter.getInstance().getControlListener().onConfirmConnection()
                     }
                     dispose()
                 }

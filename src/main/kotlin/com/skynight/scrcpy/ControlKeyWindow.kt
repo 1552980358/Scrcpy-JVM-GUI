@@ -1,7 +1,7 @@
 package com.skynight.scrcpy
 
-import com.skynight.scrcpy.Base.BaseIndex.Companion.ControlKeyFunctionList
-import com.skynight.scrcpy.Base.BaseIndex.Companion.ControlKeyList
+import com.skynight.scrcpy.base.BaseIndex.Companion.ControlKeyFunctionList
+import com.skynight.scrcpy.base.BaseIndex.Companion.ControlKeyList
 import com.skynight.scrcpy.widgets.Panel
 import java.awt.Color
 import java.awt.Toolkit

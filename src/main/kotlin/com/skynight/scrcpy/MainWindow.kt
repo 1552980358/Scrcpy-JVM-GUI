@@ -1,11 +1,11 @@
 package com.skynight.scrcpy
 
 import com.google.gson.JsonObject
-import com.skynight.scrcpy.Base.BaseIndex.Companion.PackageFileList
-import com.skynight.scrcpy.Base.BaseIndex.Companion.WidgetWithTextHeight
-import com.skynight.scrcpy.Base.BaseIndex.Companion.BitRateList
-import com.skynight.scrcpy.Base.DecodeLanguagePack
-import com.skynight.scrcpy.Base.GetConnectedDevices
+import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
+import com.skynight.scrcpy.base.BaseIndex.Companion.WidgetWithTextHeight
+import com.skynight.scrcpy.base.BaseIndex.Companion.BitRateList
+import com.skynight.scrcpy.base.ControlCenter
+import com.skynight.scrcpy.base.GetConnectedDevices
 import com.skynight.scrcpy.widgets.CheckBox
 import com.skynight.scrcpy.widgets.Panel
 import com.skynight.scrcpy.widgets.RadioButton
@@ -13,8 +13,6 @@ import java.awt.CardLayout
 import java.awt.Color
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
-import java.awt.event.ComponentEvent
-import java.awt.event.ComponentListener
 import java.awt.event.KeyEvent
 import java.io.File
 import javax.swing.JFrame
@@ -45,7 +43,7 @@ class MainWindow : JFrame() {
     private val DevicesMenu = mutableListOf<JMenuItem>()
 
     companion object {
-        var created = false
+        private var created = false
         fun isCreated(): Boolean {
             return created
         }
@@ -77,7 +75,7 @@ class MainWindow : JFrame() {
             isVisible = true
         }.start()
 
-        jsonObject = DecodeLanguagePack.getInstance().getWindowStrings("MainWindow")
+        jsonObject = ControlCenter.getInstance().getLoadLanguage().getWindowStrings("MainWindow")
 
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
@@ -156,7 +154,6 @@ class MainWindow : JFrame() {
             }
 
         })
-
 
         val connect = JMenu(menuObject.get("scrcpy").asString)
         jMenuBar.add(connect)

@@ -1,13 +1,22 @@
-package com.skynight.scrcpy.Base
+package com.skynight.scrcpy.base
 
 import com.skynight.scrcpy.ControlListener
 
-
 class ControlCenter private constructor() {
+    private val loadLanguage = LoadLanguage()
+    fun getLoadLanguage(): LoadLanguage {
+        return loadLanguage
+    }
 
     @Volatile
-    @set:Synchronized
-    lateinit var controlListener: ControlListener
+    private lateinit var controlListener: ControlListener
+    fun setControlListener(controlListener: ControlListener) {
+        this.controlListener = controlListener
+        loadLanguage.start()
+    }
+    fun getControlListener(): ControlListener {
+        return this.controlListener
+    }
 
     @Volatile
     @set:Synchronized

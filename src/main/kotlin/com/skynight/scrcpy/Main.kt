@@ -1,14 +1,15 @@
 package com.skynight.scrcpy
 
-import com.skynight.scrcpy.Base.ControlCenter
-import com.skynight.scrcpy.Base.DecodeLanguagePack
+import com.skynight.scrcpy.base.ControlCenter
+import java.util.*
 
 fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
     //test()
-
+    //LoadJson.getInstance()
+    //SelectLanguageWindow()
 
     /* Unit Test */
-    DecodeLanguagePack.getInstance().setLocale().decode()
+    //LoadJson.getInstance().setLocale().loadLanguage()
     //SplashWindow()
     //ADBWirelessWindow()
     //ADBWiredWindow()
@@ -17,11 +18,20 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
     //SelectDeviceWindow(false)
 
     //*
-    ControlCenter.getInstance().controlListener = object : ControlListener {
+    ControlCenter.getInstance().setControlListener(object : ControlListener {
+        override fun checkUserSave(splash: Boolean) {
+            super.checkUserSave(splash)
+            println("checkUserSave  $splash")
+            if (splash) {
+                SplashWindow()
+            } else {
+                SelectLanguageWindow()
+            }
+        }
+
         override fun passFileCheck() {
             super.passFileCheck()
             println("passFileCheck")
-            //MainWindow()
             SelectConnectionWindow()
         }
 
@@ -35,24 +45,30 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
         }
 
         override fun onConfirmConnection() {
+            super.onConfirmConnection()
             println("onConfirmConnection")
             TestConnectionWindow()
         }
-
         override fun passAdbCheck() {
             super.passAdbCheck()
             println("passAdbCheck")
             MainWindow.getInstance()
         }
-    }
+    })
+
+    //LoadJson.getInstance()
 
     // 启动
-    SplashWindow()
+    //SplashWindow()
     //*/
 }
 
 interface ControlListener {
     fun passFileCheck() {
+
+    }
+
+    fun checkUserSave(splash: Boolean) {
 
     }
 
@@ -66,7 +82,6 @@ interface ControlListener {
 
     fun passAdbCheck() {
 
-
     }
 
 }
@@ -74,6 +89,11 @@ interface ControlListener {
 /* Test Program Fun */
 @Suppress("unused")
 fun test() {
+
+    val locale = Locale.getDefault()
+    println(locale.language)
+    println(locale.country)
+
 /*
     val path = System.getProperty("user.dir") + File.separator + "package"
     for (i in File(path).list()) {
@@ -112,7 +132,7 @@ fun test() {
     }
 */
     /*
-    val file = File(System.getProperty("user.dir") + File.separator + DecodeLanguagePack.path)
+    val file = File(System.getProperty("user.dir") + File.separator + LoadJson.path)
     for (i in file.list()) {
         println(i)
     }

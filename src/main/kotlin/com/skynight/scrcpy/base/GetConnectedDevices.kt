@@ -1,4 +1,4 @@
-package com.skynight.scrcpy.Base
+package com.skynight.scrcpy.base
 
 
 class GetConnectedDevices private constructor() {

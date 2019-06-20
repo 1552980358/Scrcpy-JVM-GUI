@@ -1,8 +1,8 @@
 package com.skynight.scrcpy
 
-import com.skynight.scrcpy.Base.BaseIndex.Companion.PanelMarginRight
-import com.skynight.scrcpy.Base.BaseIndex.Companion.WidgetWithTextHeight
-import com.skynight.scrcpy.Base.GetConnectedDevices
+import com.skynight.scrcpy.base.BaseIndex.Companion.PanelMarginRight
+import com.skynight.scrcpy.base.BaseIndex.Companion.WidgetWithTextHeight
+import com.skynight.scrcpy.base.GetConnectedDevices
 import com.skynight.scrcpy.widgets.Button
 import com.skynight.scrcpy.widgets.CheckBox
 import com.skynight.scrcpy.widgets.Panel

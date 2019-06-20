@@ -1,6 +1,6 @@
 package com.skynight.scrcpy
 
-import com.skynight.scrcpy.Base.ControlCenter
+import com.skynight.scrcpy.base.ControlCenter
 import com.skynight.scrcpy.widgets.Button
 import com.skynight.scrcpy.widgets.Panel
 import com.skynight.scrcpy.widgets.RadioButton
@@ -57,7 +57,7 @@ class SelectConnectionWindow: JFrame("选择连接方式") {
         jButton.addActionListener {
             val controlCenter = ControlCenter.getInstance()
             controlCenter.isWiredMethod = wired.isSelected
-            controlCenter.controlListener.onHandleConnectionMethod()
+            controlCenter.getControlListener().onHandleConnectionMethod()
             dispose()
         }
 

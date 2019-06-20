@@ -1,11 +1,17 @@
-package com.skynight.scrcpy.Base
+package com.skynight.scrcpy.base
 
 import java.io.File
+import java.io.File.separator
 
 class BaseIndex {
     companion object {
         const val WidgetWithTextHeight = 26
         const val PanelMarginRight = 16
+
+        const val DefaultLocale = "zh-rCN"
+        val LanguageDir = System.getProperty("user.dir") + separator + "language"
+        val DataSave = System.getProperty("user.dir") + separator + "save"
+        const val SaveLocale = "{\n\t\"language\": \"%s\", \n\t\"region\": \"%s\"\n}"
 
         val PackageFileList = arrayListOf(
             "package${File.separator}adb.exe",

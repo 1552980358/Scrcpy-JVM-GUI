@@ -1,6 +1,6 @@
 package com.skynight.scrcpy.widgets
 
-import com.skynight.scrcpy.Base.BaseIndex
+import com.skynight.scrcpy.base.BaseIndex
 import java.awt.Color
 import javax.swing.ImageIcon
 import javax.swing.JCheckBox

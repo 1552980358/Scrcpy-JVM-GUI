@@ -6,8 +6,11 @@
 	},
     
     "SelectLanguageWindow" : {
-        "title": "选择语言..."，
-        “defult”: "默认语言: zh-rCN"
+        "title": "选择语言...",
+        “defult”: "默认语言: zh-rCN",
+        "language": "语言",
+        "region": "地区",
+        "confirm": "确定"
     },
 
 	"MainWindow": {

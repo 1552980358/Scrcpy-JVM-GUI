@@ -1,7 +1,6 @@
-package com.skynight.scrcpy.Base
+package com.skynight.scrcpy.base
 
-import com.skynight.scrcpy.Base.BaseIndex.Companion.PackageFileList
-import com.sun.jna.StringArray
+import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
 import java.awt.Color
 import java.io.File
 import java.util.*
@@ -20,7 +19,8 @@ fun exitButton(jFrame: JFrame, jPanel: JPanel) {
     jPanel.add(jButton)
     jButton.isVisible = true
     jButton.addActionListener {
-        System.exit(0)
+        ControlCenter.getInstance().getControlListener().passFileCheck()
+        jFrame.dispose()
     }
 }
 
