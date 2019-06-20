@@ -6,6 +6,7 @@ import com.skynight.scrcpy.base.BaseIndex.Companion.WidgetWithTextHeight
 import com.skynight.scrcpy.base.BaseIndex.Companion.BitRateList
 import com.skynight.scrcpy.base.ControlCenter
 import com.skynight.scrcpy.base.GetConnectedDevices
+import com.skynight.scrcpy.base.LoadLanguage
 import com.skynight.scrcpy.widgets.CheckBox
 import com.skynight.scrcpy.widgets.Panel
 import com.skynight.scrcpy.widgets.RadioButton
@@ -47,6 +48,12 @@ class MainWindow : JFrame() {
         fun isCreated(): Boolean {
             return created
         }
+
+        val instance : MainWindow by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+            created = true
+            MainWindow()
+        }
+        /*
         @Volatile
         private var instance: MainWindow? = null
         @Synchronized
@@ -57,6 +64,7 @@ class MainWindow : JFrame() {
             }
             return instance as MainWindow
         }
+         */
     }
 
     override fun setVisible(b: Boolean) {
@@ -75,7 +83,7 @@ class MainWindow : JFrame() {
             isVisible = true
         }.start()
 
-        jsonObject = ControlCenter.getInstance().getLoadLanguage().getWindowStrings("MainWindow")
+        jsonObject = /*ControlCenter.getInstance().getLoadLanguage()*/LoadLanguage.instance.getWindowStrings("MainWindow")
 
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
@@ -400,6 +408,7 @@ class MainWindow : JFrame() {
             bitRate = 4
         }
         bitRatePanel3.add(customBitRate)
+        //customBitRate.setSize(100, 26)
         bitRatePanel3.isVisible = true
     }
 

@@ -61,7 +61,7 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
             super.passAdbCheck()
             //println("passAdbCheck")
             LogOutputWindow.takeLog("passAdbCheck")
-            MainWindow.getInstance()
+            MainWindow.instance
         }
     })
 

@@ -3,6 +3,7 @@ package com.skynight.scrcpy
 import com.skynight.scrcpy.base.ControlCenter
 import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
 import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFilesMD5
+import com.skynight.scrcpy.base.LoadLanguage
 import com.skynight.scrcpy.base.exitButton
 import org.apache.commons.codec.digest.DigestUtils
 import java.awt.Color
@@ -18,7 +19,7 @@ import kotlin.math.log
 class SplashWindow : JFrame() {
 
     init {
-        val jsonObject = ControlCenter.getInstance().getLoadLanguage().getWindowStrings("SplashWindow")
+        val jsonObject = LoadLanguage.instance.getWindowStrings("SplashWindow")
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
         setSize(300, 120)

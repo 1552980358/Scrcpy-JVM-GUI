@@ -4,16 +4,13 @@ import com.skynight.scrcpy.ControlListener
 import com.skynight.scrcpy.LogOutputWindow
 
 class ControlCenter private constructor() {
-    private val loadLanguage = LoadLanguage()
-    fun getLoadLanguage(): LoadLanguage {
-        return loadLanguage
-    }
 
     @Volatile
     private lateinit var controlListener: ControlListener
     fun setControlListener(controlListener: ControlListener) {
         this.controlListener = controlListener
-        loadLanguage.start()
+        LogOutputWindow.takeLog("startLoading")
+        LoadLanguage.instance
     }
     fun getControlListener(): ControlListener {
         return this.controlListener

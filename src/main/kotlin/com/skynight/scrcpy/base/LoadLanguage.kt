@@ -16,11 +16,7 @@ class LoadLanguage {
     lateinit var region: String
 
     val supportedLanguages = mutableListOf<String>()
-    private val supportedLocale = mutableMapOf<String, MutableList<String>>()
-
-    fun getSupportedLocale(): MutableMap<String, MutableList<String>> {
-        return supportedLocale
-    }
+    val supportedLocale = mutableMapOf<String, MutableList<String>>()
 
     companion object {
         private lateinit var systemLanguage: String
@@ -33,6 +29,11 @@ class LoadLanguage {
             }
             return "$systemLanguage-r$systemRegion"
         }
+
+        val instance  by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED ) {
+            LoadLanguage()
+        }
+
 /*
         @Volatile
         private var instance: LoadLanguage? = null
@@ -48,7 +49,7 @@ class LoadLanguage {
     }
 
     init {
-
+        start()
     }
 
     fun start() {
@@ -77,7 +78,7 @@ class LoadLanguage {
                 val language = json.get("language").asString
 
                 setLocale(language, region)
-                ControlCenter.getInstance().getControlListener().checkUserSave(true)
+                Thread { ControlCenter.getInstance().getControlListener().checkUserSave(true) }.start()
             } catch (e: Exception) {
                 //e.printStackTrace()
                 LogOutputWindow.takeLog(e)
@@ -90,7 +91,7 @@ class LoadLanguage {
                         LogOutputWindow.takeLog(e)
                     }
                 }
-                ControlCenter.getInstance().getControlListener().checkUserSave(false)
+                Thread { ControlCenter.getInstance().getControlListener().checkUserSave(false) }.start()
             }
         } else {
             while (loadLanguages.isAlive) {
@@ -101,7 +102,7 @@ class LoadLanguage {
                     LogOutputWindow.takeLog(e)
                 }
             }
-            ControlCenter.getInstance().getControlListener().checkUserSave(false)
+            Thread { ControlCenter.getInstance().getControlListener().checkUserSave(false) }.start()
         }
     }
 

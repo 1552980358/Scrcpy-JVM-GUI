@@ -14,7 +14,7 @@ class TestConnectionWindow : JFrame() {
 
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
-        val jsonObject = ControlCenter.getInstance().getLoadLanguage().getWindowStrings("TestConnectionWindow")
+        val jsonObject = LoadLanguage.instance.getWindowStrings("TestConnectionWindow")
 
         title = jsonObject.get("title").asString
         setSize(300, 120)

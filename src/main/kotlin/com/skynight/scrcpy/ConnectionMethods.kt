@@ -14,7 +14,7 @@ class ADBWiredWindow : JFrame() {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
-        val jsonObject = ControlCenter.getInstance().getLoadLanguage().getWindowStrings("ADBWiredWindow")
+        val jsonObject = /*ControlCenter.getInstance().getLoadLanguage()*/LoadLanguage.instance.getWindowStrings("ADBWiredWindow")
 
         title = jsonObject.get("title").asString
         setSize(350, 300)
@@ -70,7 +70,7 @@ class ADBWirelessWindow : JFrame() {
 
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
-        jsonObject = ControlCenter.getInstance().getLoadLanguage().getWindowStrings("ADBWirelessWindow")
+        jsonObject = LoadLanguage.instance.getWindowStrings("ADBWirelessWindow")
 
         title = jsonObject.get("title").asString
         setSize(350, 300)

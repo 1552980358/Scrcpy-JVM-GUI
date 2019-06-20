@@ -18,9 +18,9 @@ import javax.swing.JLabel
 class SelectLanguageWindow: JFrame() {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
-        val loadLanguage = ControlCenter.getInstance().getLoadLanguage()
+        val loadLanguage = LoadLanguage.instance
 
-        ControlCenter.getInstance().getLoadLanguage().setLocale(
+        loadLanguage.setLocale(
             if (File(LanguageDir + File.separator + LoadLanguage.getSystemLocale()).exists()) {
                LoadLanguage.getSystemLocale()
             } else {
@@ -54,13 +54,13 @@ class SelectLanguageWindow: JFrame() {
         val reg = JComboBox<String>()
         mainPanel.add(reg)
         reg.setBounds(10,65,width - 20 - 16, 20)
-        for (i in loadLanguage.getSupportedLocale()[lang.selectedItem as String]!!) {
+        for (i in loadLanguage.supportedLocale[lang.selectedItem as String]!!) {
             reg.addItem(i)
         }
         lang.addActionListener {
             Thread {
                 reg.removeAllItems()
-                for (i in loadLanguage.getSupportedLocale()[lang.selectedItem as String]!!) {
+                for (i in loadLanguage.supportedLocale[lang.selectedItem as String]!!) {
                     reg.addItem(i)
                 }
             }.start()
