@@ -1,6 +1,7 @@
 package com.skynight.scrcpy.base
 
 import com.skynight.scrcpy.ControlListener
+import com.skynight.scrcpy.LogOutputWindow
 
 class ControlCenter private constructor() {
     private val loadLanguage = LoadLanguage()
@@ -31,5 +32,8 @@ class ControlCenter private constructor() {
             }
             return instance as ControlCenter
         }
+    }
+    init {
+        LogOutputWindow.getInstance()
     }
 }

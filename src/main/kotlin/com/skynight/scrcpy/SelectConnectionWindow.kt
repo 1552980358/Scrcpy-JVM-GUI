@@ -16,7 +16,7 @@ class SelectConnectionWindow: JFrame("选择连接方式") {
         setSize(300, 160)
         isResizable = false
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
-        defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
+        defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         isAlwaysOnTop = true
         addComponentListener(object : ComponentListener {
             override fun componentMoved(e: ComponentEvent?) {

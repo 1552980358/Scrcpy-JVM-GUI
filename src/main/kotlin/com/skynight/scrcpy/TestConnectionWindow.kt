@@ -56,6 +56,7 @@ class TestConnectionWindow : JFrame() {
 
             if (!checkAdbConnect()) {
                 content.text = jsonObject.get("connection_check_fail").asString
+                LogOutputWindow.takeLog("Test Connection Fail")
                 exitButton(this, panel)
                 return@Thread
             }

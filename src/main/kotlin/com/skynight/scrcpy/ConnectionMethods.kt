@@ -20,7 +20,7 @@ class ADBWiredWindow : JFrame() {
         setSize(350, 300)
         isAlwaysOnTop = true
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
-        defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
+        defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         isVisible = true
 
         addComponentListener(object : ComponentListener {
@@ -75,7 +75,7 @@ class ADBWirelessWindow : JFrame() {
         title = jsonObject.get("title").asString
         setSize(350, 300)
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
-        defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
+        defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         isVisible = true
 
         val jPanel = JPanel()
@@ -124,16 +124,20 @@ class ADBWirelessWindow : JFrame() {
                         try {
                             text =
                                 runAdbGetList("shell ip route list table 0 | grep \"192.168.\" | grep local | grep -v broadcast")[0]
-                            print(text)
+                            //print(text)
+                            LogOutputWindow.takeLog(text)
+
                             var i = text.indexOf("192")
-                            print(i)
+                            //print(i)
+
 
                             while (text[i].toString() != " ") {
                                 ip.append(i)
                                 i++
                             }
                         } catch (e: Exception) {
-                            e.printStackTrace()
+                            //e.printStackTrace()
+                            LogOutputWindow.takeLog(e)
                         }
 
                         /* 192.168.1.[0-9]{1,3} */

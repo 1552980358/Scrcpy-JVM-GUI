@@ -1,5 +1,6 @@
 package com.skynight.scrcpy.base
 
+import com.skynight.scrcpy.LogOutputWindow
 import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
 import java.awt.Color
 import java.io.File
@@ -149,17 +150,25 @@ fun checkAdbConnect(): Boolean {
     val result = runAdbGetList("devices")
 
     if (result[1].isEmpty()) {
-        println("无设备")
+        //println("无设备")
+        LogOutputWindow.takeLog("No Device")
         return false
     }
 
     for ((j,i) in result.withIndex()) {
         if (i.contains("device") && j != 0) {
-            print("最少有一个设备连接")
+            //print("最少有一个设备连接")
+            LogOutputWindow.takeLog("Device Connected")
             return true
         }
         if (i.contains("offline")) {
-            print("设备离线")
+            //print("设备离线")
+            LogOutputWindow.takeLog("Device Offline")
+            return false
+        }
+        if (i.contains("unauthroized")) {
+            //print("设备离线")
+            LogOutputWindow.takeLog("Device Unauthorized")
             return false
         }
     }

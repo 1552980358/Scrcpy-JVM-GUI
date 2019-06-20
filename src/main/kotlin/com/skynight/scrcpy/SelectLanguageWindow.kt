@@ -17,11 +17,9 @@ import javax.swing.JLabel
 
 class SelectLanguageWindow: JFrame() {
     init {
-        println("startSelectLanguage")
         val screenSize = Toolkit.getDefaultToolkit().screenSize
         val loadLanguage = ControlCenter.getInstance().getLoadLanguage()
 
-        println("1")
         ControlCenter.getInstance().getLoadLanguage().setLocale(
             if (File(LanguageDir + File.separator + LoadLanguage.getSystemLocale()).exists()) {
                LoadLanguage.getSystemLocale()
@@ -30,7 +28,6 @@ class SelectLanguageWindow: JFrame() {
             }
         )
 
-        println("2")
         val loadJson = loadLanguage.getWindowStrings("SelectLanguageWindow")
         title = loadJson.get("title").asString
         setSize(350, 170)
@@ -41,7 +38,6 @@ class SelectLanguageWindow: JFrame() {
         val mainPanel = Panel(width, height, null)
         add(mainPanel)
 
-        println("3")
         val l = JLabel(loadJson.get("language").asString, JLabel.CENTER)
         mainPanel.add(l)
         l.setBounds(0,0,width - 16, 20)
@@ -52,7 +48,6 @@ class SelectLanguageWindow: JFrame() {
             lang.addItem(i)
         }
 
-        println("4")
         val r = JLabel(loadJson.get("region").asString, JLabel.CENTER)
         mainPanel.add(r)
         r.setBounds(0,45,width - 16, 20)
@@ -71,12 +66,12 @@ class SelectLanguageWindow: JFrame() {
             }.start()
         }
 
-        println("5")
         val confirm = Button(loadJson.get("confirm").asString, 10, 95, width - 20 - 16, 30)
         mainPanel.add(confirm)
         confirm.addActionListener {
             Thread {
-                println(lang.selectedItem as String + "-r" + reg.selectedItem as String)
+                //println(lang.selectedItem as String + "-r" + reg.selectedItem as String)
+                LogOutputWindow.takeLog("Language: " + lang.selectedItem as String + "-r" + reg.selectedItem as String)
 
                 val file = File(DataSave, "locale")
                 if (file.exists()) {
@@ -95,7 +90,6 @@ class SelectLanguageWindow: JFrame() {
             }.start()
         }
 
-        println("showSelectLanguage")
         isVisible = true
     }
 }

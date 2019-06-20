@@ -2,6 +2,8 @@ package com.skynight.scrcpy.base
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.skynight.scrcpy.LogOutputWindow
+import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
 import java.io.File
 import java.util.*
 
@@ -54,11 +56,10 @@ class LoadLanguage {
         languageList = file.list().toMutableList()
 
         val loadLanguages = Thread {
-            val json = JsonParser().parse(File(System.getProperty("user.dir") + File.separator + "package" + File.separator + "SupportedLanguage").inputStream().bufferedReader().readText()).asJsonObject
+            val json = JsonParser().parse(File(System.getProperty("user.dir") + File.separator + PackageFileList[10])
+                .inputStream().bufferedReader().readText()).asJsonObject
             for (i in json.get("Languages").asJsonArray) {
                 supportedLanguages.add(i.asString)
-                //println(i.toString())
-                //val a = i.toString() val k = JsonParser().parse(File(System.getProperty("user.dir") + File.separator + "package" + File.separator + "SupportedLanguage").inputStream().bufferedReader().readText()).asJsonObject
                 val tmp = mutableListOf<String>()
                 for (j in  json.get(i.asString).asJsonArray) {
                     tmp.add(j.asString)
@@ -75,17 +76,18 @@ class LoadLanguage {
                 val region = json.get("region").asString
                 val language = json.get("language").asString
 
-
                 setLocale(language, region)
                 ControlCenter.getInstance().getControlListener().checkUserSave(true)
             } catch (e: Exception) {
-                e.printStackTrace()
+                //e.printStackTrace()
+                LogOutputWindow.takeLog(e)
                 path.delete()
                 while (loadLanguages.isAlive) {
                     try {
                         Thread.sleep(1)
                     } catch (e: Exception) {
-                        e.printStackTrace()
+                        //e.printStackTrace()
+                        LogOutputWindow.takeLog(e)
                     }
                 }
                 ControlCenter.getInstance().getControlListener().checkUserSave(false)
@@ -95,12 +97,12 @@ class LoadLanguage {
                 try {
                     Thread.sleep(1)
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    //e.printStackTrace()
+                    LogOutputWindow.takeLog(e)
                 }
             }
             ControlCenter.getInstance().getControlListener().checkUserSave(false)
         }
-        println("init finish")
     }
 
     fun setLocale(language: String, region: String) {
@@ -109,13 +111,13 @@ class LoadLanguage {
         this.setLocale("$language-r$region")
     }
     fun setLocale(locale: String) {
-        println(locale)
+        LogOutputWindow.takeLog(locale)
         this.locale = locale
         loadLocaleFile()
     }
     private fun loadLocaleFile() {
         if (languageList.contains(locale)) {
-            println(System.getProperty("user.dir") + File.separator + "language" + File.separator + locale)
+            //println(System.getProperty("user.dir") + File.separator + "language" + File.separator + locale)
             jsonObject = JsonParser().parse(File(System.getProperty("user.dir") + File.separator + "language" + File.separator + locale)
                 .inputStream().bufferedReader().readText()).asJsonObject
         } else {

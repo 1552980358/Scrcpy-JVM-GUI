@@ -13,6 +13,7 @@ import java.io.File
 import java.io.FileInputStream
 import javax.swing.JPanel
 import javax.swing.*
+import kotlin.math.log
 
 class SplashWindow : JFrame() {
 
@@ -81,8 +82,9 @@ class SplashWindow : JFrame() {
         val dir = System.getProperty("user.dir") + File.separator
         for (i in PackageFileList) {
             val file = File(dir + i)
-            println(file.toString())
+            LogOutputWindow.takeLog("CheckFile$file")
             if (!file.exists()) {
+                LogOutputWindow.takeLog("CheckFile Error at $i")
                 return false
             }
         }
@@ -93,7 +95,9 @@ class SplashWindow : JFrame() {
         val dir = System.getProperty("user.dir") + File.separator
         for (i in PackageFileList) {
             val file = File(dir + i)
+            LogOutputWindow.takeLog("CheckMD5 ${file.path}: ${PackageFilesMD5[i]}")
             if (PackageFilesMD5[i] != DigestUtils.md5Hex(FileInputStream(file))) {
+                LogOutputWindow.takeLog("CheckMD5 Error at $i")
                 return false
             }
         }

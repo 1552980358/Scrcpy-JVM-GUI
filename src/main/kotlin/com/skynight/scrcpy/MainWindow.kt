@@ -82,7 +82,6 @@ class MainWindow : JFrame() {
         title = jsonObject.get("title").asString
         setSize(750, 350)
         isResizable = false
-        Thread { setMenu() }.start()
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         isVisible = false
@@ -93,6 +92,7 @@ class MainWindow : JFrame() {
         contentPane = mainPanel
         mainPanel.isVisible = false
 
+        Thread { setMenu() }.start()
         Thread { setBitRate() }.start()
         Thread { setTools() }.start()
         Thread { getDeviceInfo() }.start()
@@ -136,7 +136,7 @@ class MainWindow : JFrame() {
         try {
             addDevicesToMenu(deviceJMenu)
         } catch (e: Exception) {
-            //
+            LogOutputWindow.takeLog(e)
         }
 
         val connectNewDevice = JMenu(menuObject.get("newConnection").asString)
@@ -205,6 +205,8 @@ class MainWindow : JFrame() {
         }
         command.add(bitrate)
 
+        LogOutputWindow.takeLog(command.toString())
+
         return command
     }
 
@@ -212,6 +214,7 @@ class MainWindow : JFrame() {
         DevicesMenu.clear()
         val getConnectedDevices = GetConnectedDevices.getInstance()
         for (i in getConnectedDevices.getDeviceList()) {
+            LogOutputWindow.takeLog(i)
             val jMenuItem = JMenuItem(getConnectedDevices.getDeviceModel(i))
             jMenuItem.background = Color.WHITE
             jMenuItem.addActionListener {
@@ -228,7 +231,7 @@ class MainWindow : JFrame() {
             mainPanel.remove(deviceInfoPanel)
             panelList.clear()
         } catch (e: Exception) {
-            //
+            LogOutputWindow.takeLog(e)
         }
         cardLayout = CardLayout()
         deviceInfoPanel = Panel(0, 0, width / 3, height - 64, cardLayout)
@@ -397,7 +400,6 @@ class MainWindow : JFrame() {
             bitRate = 4
         }
         bitRatePanel3.add(customBitRate)
-        //customBitRate.setSize(100, 26)
         bitRatePanel3.isVisible = true
     }
 

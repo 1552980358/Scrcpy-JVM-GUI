@@ -104,10 +104,12 @@ class SelectDeviceWindow(commands: MutableList<String>, single: Boolean = true):
 
                 for (i in commandList) {
                     try {
-                        println(i.toMutableList())
+                        //println(i.toMutableList())
+                        LogOutputWindow.takeLog("ConnectCommand: $i")
                         Runtime.getRuntime().exec(i)
                     } catch (e: Exception) {
-                        e.printStackTrace()
+                        //e.printStackTrace()
+                        LogOutputWindow.takeLog(e)
                     }
                 }
             }.start()
