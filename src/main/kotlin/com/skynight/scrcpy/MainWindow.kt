@@ -49,22 +49,10 @@ class MainWindow : JFrame() {
             return created
         }
 
-        val instance : MainWindow by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+        val instance: MainWindow by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             created = true
             MainWindow()
         }
-        /*
-        @Volatile
-        private var instance: MainWindow? = null
-        @Synchronized
-        fun getInstance(): MainWindow {
-            if (instance == null) {
-                created = true
-                instance = MainWindow()
-            }
-            return instance as MainWindow
-        }
-         */
     }
 
     override fun setVisible(b: Boolean) {
@@ -83,7 +71,7 @@ class MainWindow : JFrame() {
             isVisible = true
         }.start()
 
-        jsonObject = /*ControlCenter.getInstance().getLoadLanguage()*/LoadLanguage.instance.getWindowStrings("MainWindow")
+        jsonObject = LoadLanguage.instance.getWindowStrings("MainWindow")
 
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
@@ -104,6 +92,7 @@ class MainWindow : JFrame() {
         Thread { setBitRate() }.start()
         Thread { setTools() }.start()
         Thread { getDeviceInfo() }.start()
+        Thread { getSaveLoad() }.start()
 
         mainPanel.isVisible = true
     }
@@ -197,7 +186,10 @@ class MainWindow : JFrame() {
             "start",
             "cmd.exe",
             "/c",
-            System.getProperty("user.dir") + File.separator + PackageFileList[6]
+            if (ControlCenter.instance.getConsoleless())
+                System.getProperty("user.dir") + File.separator + PackageFileList[7]
+            else
+                System.getProperty("user.dir") + File.separator + PackageFileList[6]
         )
 
         for (i in CheckBoxes) {
@@ -222,7 +214,7 @@ class MainWindow : JFrame() {
         DevicesMenu.clear()
         val getConnectedDevices = GetConnectedDevices.getInstance()
         for (i in getConnectedDevices.getDeviceList()) {
-            LogOutputWindow.takeLog(i)
+            LogOutputWindow.takeLog("AddDevicesToMenu: $i")
             val jMenuItem = JMenuItem(getConnectedDevices.getDeviceModel(i))
             jMenuItem.background = Color.WHITE
             jMenuItem.addActionListener {
@@ -233,13 +225,33 @@ class MainWindow : JFrame() {
         }
     }
 
+    private fun getSaveLoad() {
+        val panel = Panel(width * 2 / 3, 0, width / 3 - 16, 85)
+        mainPanel.add(panel)
+        panel.border = BorderFactory.createTitledBorder("~ 提示符 ~")
+        val logOutputWindow = CheckBox("启用Log输出窗口", ControlCenter.instance.getLogOutputWindow())
+        panel.add(logOutputWindow)
+        logOutputWindow.addItemListener {
+            ControlCenter.instance.setLogOutputWindow(logOutputWindow.isSelected)
+        }
+        LogOutputWindow.instance.listener = object : LogWindowOperationListener {
+            override fun onStateChange(isVisible: Boolean) {
+                super.onStateChange(isVisible)
+                logOutputWindow.isSelected = isVisible
+            }
+        }
+        val consoleless = CheckBox("隐藏scrcpy窗口", ControlCenter.instance.getConsoleless())
+        panel.add(consoleless)
+        consoleless.addActionListener {
+            ControlCenter.instance.setConsoleless(consoleless.isSelected)
+        }
+    }
+
     private fun getDeviceInfo() {
         val deviceInfo = jsonObject.get("DeviceInfo").asJsonObject
-        try {
+        if (::deviceInfoPanel.isInitialized) {
             mainPanel.remove(deviceInfoPanel)
             panelList.clear()
-        } catch (e: Exception) {
-            LogOutputWindow.takeLog(e)
         }
         cardLayout = CardLayout()
         deviceInfoPanel = Panel(0, 0, width / 3, height - 64, cardLayout)
@@ -340,12 +352,9 @@ class MainWindow : JFrame() {
 
     private fun setBitRate() {
         @Suppress("LocalVariableName") val BitRate = jsonObject.get("BitRate").asJsonObject
-        val jPanel = JPanel()
+        val jPanel = Panel(width / 3, 0, width / 3, 120, null)
         jPanel.border = BorderFactory.createTitledBorder(BitRate.get("title").asString)
         mainPanel.add(jPanel)
-        jPanel.background = Color.WHITE
-        jPanel.setBounds(width / 3, 0, width / 3, 120)
-        jPanel.layout = null
 
         val bitRatePanel1 = JPanel()
         bitRatePanel1.isVisible = false
@@ -414,16 +423,12 @@ class MainWindow : JFrame() {
 
     private fun setTools() {
         val tools = jsonObject.get("Tools").asJsonObject
-        val jPanel = JPanel()
-        jPanel.border = BorderFactory.createTitledBorder(tools.get("title").asString)
-        mainPanel.add(jPanel)
-        jPanel.setBounds(width / 3, 120, width / 3, 60)
-        jPanel.background = Color.WHITE
-        jPanel.setSize(250, 120)
-        jPanel.layout = null
+        val panel = Panel(width / 3, 120, width / 3, 120, null)
+        panel.border = BorderFactory.createTitledBorder(tools.get("title").asString)
+        mainPanel.add(panel)
 
         val jPanel1 = JPanel()
-        jPanel.add(jPanel1)
+        panel.add(jPanel1)
         jPanel1.background = Color.WHITE
         jPanel1.setBounds(10, 20, 230, WidgetWithTextHeight)
 
@@ -436,7 +441,7 @@ class MainWindow : JFrame() {
         jPanel1.isVisible = true
 
         val jPanel2 = JPanel()
-        jPanel.add(jPanel2)
+        panel.add(jPanel2)
         jPanel2.background = Color.WHITE
         jPanel2.setBounds(10, 46, 230, WidgetWithTextHeight)
 
@@ -449,7 +454,7 @@ class MainWindow : JFrame() {
         jPanel2.isVisible = true
 
         val jPanel3 = JPanel()
-        jPanel.add(jPanel3)
+        panel.add(jPanel3)
         jPanel3.background = Color.WHITE
         jPanel3.setBounds(10, 72, 230, WidgetWithTextHeight)
 

@@ -10,17 +10,17 @@ class Panel: JPanel {
     }
 
     constructor(x: Int, y: Int, width: Int, height: Int): this() {
-        setBounds(x, y, width - WidthBorder, height)
+        setBounds(x, y, width, height)
     }
     constructor(width: Int, height: Int) : this() {
-        setSize(width - WidthBorder, height)
+        setSize(width, height)
     }
     constructor(x: Int, y: Int, width: Int, height: Int, layout: LayoutManager?): this() {
-        setBounds(x, y, width - WidthBorder, height)
+        setBounds(x, y, width, height)
         setLayout(layout)
     }
     constructor(width: Int, height: Int, layout: LayoutManager?): this() {
-        setSize(width - WidthBorder, height)
+        setSize(width, height)
         setLayout(layout)
     }
     constructor(): super() {

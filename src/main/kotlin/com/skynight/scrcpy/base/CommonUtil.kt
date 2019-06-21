@@ -20,7 +20,7 @@ fun exitButton(jFrame: JFrame, jPanel: JPanel) {
     jPanel.add(jButton)
     jButton.isVisible = true
     jButton.addActionListener {
-        ControlCenter.getInstance().getControlListener().passFileCheck()
+        ControlCenter.instance.getControlListener().passFileCheck()
         jFrame.dispose()
     }
 }
@@ -43,21 +43,20 @@ fun runAdb(commands: String): Boolean {
 }
 
 fun runAdb(commands: Array<String>): Boolean {
-    println(commands)
     try {
         // 已有ADB
         Runtime.getRuntime()
             .exec(commands)
             .inputStream.bufferedReader().readLines()
     } catch (e: Exception) {
-        e.printStackTrace()
+        LogOutputWindow.takeLog(e)
         try {
             // 封装ADB
             Runtime.getRuntime()
                 .exec(arrayOf(System.getProperty("user.dir") + File.separator + PackageFileList[0], "devices"))
                 .inputStream.bufferedReader().readLines()
         } catch (e: Exception) {
-            e.printStackTrace()
+            LogOutputWindow.takeLog(e)
             return false
         }
     }
@@ -95,12 +94,10 @@ fun runAdbGetList(commands: String): List<String> {
 }
 */
 
-fun runAdbGetList(commands: String): List<String> {
-    //println(commands)
-    val array = if (commands.contains(" ")) {
-        //println("1")
+fun runAdbGetList(command: String): List<String> {
+    val array = if (command.contains(" ")) {
         val arrayList = ArrayList(Arrays.asList(
-            *commands
+            *command
                 .split(" ".toRegex())
                 .dropLastWhile { it.isEmpty() }
                 .toTypedArray()))
@@ -111,36 +108,32 @@ fun runAdbGetList(commands: String): List<String> {
         }
         tmp.toList().toTypedArray()
     } else {
-        //println("2")
-        arrayOf("adb", commands)
+        arrayOf("adb", command)
     }
-
-    //println(array)
 
     return runAdbGetList(array)
 }
 
 
-fun runAdbGetList(commands: Array<String>): List<String> {
-    //println(commands)
-
+fun runAdbGetList(command: Array<String>): List<String> {
+    LogOutputWindow.takeLog("Command: " + command.toList().toString())
     return try {
         // 已有ADB
         val p = Runtime.getRuntime()
-            .exec(commands)
+            .exec(command)
         p.waitFor()
         p.inputStream.bufferedReader().readLines()
     } catch (e: Exception) {
-        e.printStackTrace()
+        LogOutputWindow.takeLog(e)
         try {
-            commands[0] = System.getProperty("user.dir") + File.separator + PackageFileList[0]
+            command[0] = System.getProperty("user.dir") + File.separator + PackageFileList[0]
             // 封装ADB
             val p = Runtime.getRuntime()
-                .exec(commands)
+                .exec(command)
             p.waitFor()
             p.inputStream.bufferedReader().readLines()
         } catch (e: Exception) {
-            e.printStackTrace()
+            LogOutputWindow.takeLog(e)
             return listOf()
         }
     }
@@ -150,24 +143,20 @@ fun checkAdbConnect(): Boolean {
     val result = runAdbGetList("devices")
 
     if (result[1].isEmpty()) {
-        //println("无设备")
         LogOutputWindow.takeLog("No Device")
         return false
     }
 
-    for ((j,i) in result.withIndex()) {
+    for ((j, i) in result.withIndex()) {
         if (i.contains("device") && j != 0) {
-            //print("最少有一个设备连接")
             LogOutputWindow.takeLog("Device Connected")
             return true
         }
         if (i.contains("offline")) {
-            //print("设备离线")
             LogOutputWindow.takeLog("Device Offline")
             return false
         }
         if (i.contains("unauthroized")) {
-            //print("设备离线")
             LogOutputWindow.takeLog("Device Unauthorized")
             return false
         }

@@ -22,8 +22,10 @@ class SelectLanguageWindow: JFrame() {
 
         loadLanguage.setLocale(
             if (File(LanguageDir + File.separator + LoadLanguage.getSystemLocale()).exists()) {
-               LoadLanguage.getSystemLocale()
+                LogOutputWindow.takeLog("System Language Supported: ${LoadLanguage.getSystemLocale()}")
+                LoadLanguage.getSystemLocale()
             } else {
+                LogOutputWindow.takeLog("System Language Not Supported, Use Default Locale: $DefaultLocale")
                 DefaultLocale
             }
         )
@@ -33,7 +35,7 @@ class SelectLanguageWindow: JFrame() {
         setSize(350, 170)
         isResizable = false
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
-        defaultCloseOperation = if (MainWindow.isCreated()) JFrame.EXIT_ON_CLOSE else JFrame.DISPOSE_ON_CLOSE
+        defaultCloseOperation = if (MainWindow.isCreated())JFrame.DISPOSE_ON_CLOSE else JFrame.EXIT_ON_CLOSE
 
         val mainPanel = Panel(width, height, null)
         add(mainPanel)
@@ -84,7 +86,7 @@ class SelectLanguageWindow: JFrame() {
                 fileWriter.flush()
                 fileWriter.close()
 
-                ControlCenter.getInstance().getControlListener().checkUserSave(true)
+                ControlCenter.instance.getControlListener().checkUserSave(true)
 
                 dispose()
             }.start()

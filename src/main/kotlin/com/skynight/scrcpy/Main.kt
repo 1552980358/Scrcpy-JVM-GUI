@@ -1,14 +1,9 @@
 package com.skynight.scrcpy
 
 import com.skynight.scrcpy.base.ControlCenter
-import org.apache.commons.codec.digest.DigestUtils
-import java.io.File
-import java.io.FileInputStream
-import java.util.*
 
 fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
     //test()
-    //LoadJson.getInstance()
     //SelectLanguageWindow()
 
     /* Unit Test */
@@ -21,10 +16,9 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
     //SelectDeviceWindow(false)
 
     //*
-    ControlCenter.getInstance().setControlListener(object : ControlListener {
+    ControlCenter.instance.setControlListener(object : ControlListener {
         override fun checkUserSave(splash: Boolean) {
             super.checkUserSave(splash)
-            //println("checkUserSave  $splash")
             LogOutputWindow.takeLog("checkUserSave  $splash")
             if (splash) {
                 SplashWindow()
@@ -35,14 +29,13 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
 
         override fun passFileCheck() {
             super.passFileCheck()
-            //println("passFileCheck")
             LogOutputWindow.takeLog("passFileCheck")
             SelectConnectionWindow()
         }
 
         override fun onHandleConnectionMethod() {
             super.onHandleConnectionMethod()
-            if (ControlCenter.getInstance().isWiredMethod) {
+            if (ControlCenter.instance.isWiredMethod) {
                 LogOutputWindow.takeLog("onHandleConnectionMethod Wired")
                 ADBWiredWindow()
             } else {
@@ -53,22 +46,15 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
 
         override fun onConfirmConnection() {
             super.onConfirmConnection()
-            //println("onConfirmConnection")
             LogOutputWindow.takeLog("onConfirmConnection")
             TestConnectionWindow()
         }
         override fun passAdbCheck() {
             super.passAdbCheck()
-            //println("passAdbCheck")
             LogOutputWindow.takeLog("passAdbCheck")
             MainWindow.instance
         }
     })
-
-    //LoadJson.getInstance()
-
-    // 启动
-    //SplashWindow()
     //*/
 }
 
@@ -103,14 +89,14 @@ fun test() {
     println(locale.language)
     println(locale.country)
 */
-
+/*
     val path = System.getProperty("user.dir") + File.separator + "package"
     for (i in File(path).list()) {
         val f = File(path + File.separator + i)
         println(f.path)
         println(DigestUtils.md5Hex(FileInputStream(f)))
     }
-
+*/
     /*
     if (SystemTray.isSupported()) {
         val systemTray = SystemTray.getSystemTray()

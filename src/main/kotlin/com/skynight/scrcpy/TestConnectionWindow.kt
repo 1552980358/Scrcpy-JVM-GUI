@@ -71,7 +71,7 @@ class TestConnectionWindow : JFrame() {
 
             title = jsonObject.get("connection_check_succeed").asString
 
-            ControlCenter.getInstance().getControlListener().passAdbCheck()
+            ControlCenter.instance.getControlListener().passAdbCheck()
 
             for (i: Int in 1..3) {
                 content.text = String.format(jsonObject.get("time_remain").asString, 4 - i)

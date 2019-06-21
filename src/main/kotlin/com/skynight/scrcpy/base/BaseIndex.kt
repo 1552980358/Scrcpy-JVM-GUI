@@ -11,6 +11,7 @@ class BaseIndex {
         const val DefaultLocale = "zh-rCN"
         val LanguageDir = System.getProperty("user.dir") + separator + "language"
         val DataSave = System.getProperty("user.dir") + separator + "save"
+        const val SaveConsoleSetting = "{\n\t\"LogOutputWindow\": %s,\n\t\"Consoleless\": %s\n}\n"
         const val SaveLocale = "{\n\t\"language\": \"%s\", \n\t\"region\": \"%s\"\n}"
 
         val PackageFileList = arrayListOf(
@@ -24,7 +25,6 @@ class BaseIndex {
             "package${File.separator}scrcpy-noconsole.exe",
             "package${File.separator}scrcpy-server.jar",
             "package${File.separator}SDL2.dll",
-            "package${File.separator}SupportedLanguage",
             "package${File.separator}swresample-3.dll",
             "package${File.separator}swscale-5.dll"
         )
@@ -40,9 +40,8 @@ class BaseIndex {
             PackageFileList[7] to "73188f4f4c9b518e45f050a0f3e95531",
             PackageFileList[8] to "1ba41bc8fb734d3e31e2eef1f3077314",
             PackageFileList[9] to "6f0469c91c605754eb64163b5f9014ad",
-            PackageFileList[10] to "6607d0dcc6fa68132a838f3b1f8ac9fb",
-            PackageFileList[11] to "addca5fa064b7b205199f8769f28e503",
-            PackageFileList[12] to "d54df450246c705ceb3286dd95dce4b2"
+            PackageFileList[10] to "addca5fa064b7b205199f8769f28e503",
+            PackageFileList[11] to "d54df450246c705ceb3286dd95dce4b2"
         )
 
         val ScrcpyArgsList = arrayListOf(

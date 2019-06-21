@@ -55,7 +55,7 @@ class ADBWiredWindow : JFrame() {
         val jButton = Button(jsonObject.get("step_done").asString, 10, 200, 310, 50)
         jButton.addActionListener {
             if (!MainWindow.isCreated()){
-                ControlCenter.getInstance().getControlListener().onConfirmConnection()
+                ControlCenter.instance.getControlListener().onConfirmConnection()
             }
             dispose()
         }
@@ -66,7 +66,7 @@ class ADBWiredWindow : JFrame() {
 }
 
 class ADBWirelessWindow : JFrame() {
-    var jsonObject: JsonObject
+    private var jsonObject: JsonObject
 
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
@@ -124,12 +124,9 @@ class ADBWirelessWindow : JFrame() {
                         try {
                             text =
                                 runAdbGetList("shell ip route list table 0 | grep \"192.168.\" | grep local | grep -v broadcast")[0]
-                            //print(text)
                             LogOutputWindow.takeLog(text)
 
                             var i = text.indexOf("192")
-                            //print(i)
-
 
                             while (text[i].toString() != " ") {
                                 ip.append(i)
@@ -167,7 +164,7 @@ class ADBWirelessWindow : JFrame() {
                 }
                 5 -> {
                     if (!MainWindow.isCreated()){
-                        ControlCenter.getInstance().getControlListener().onConfirmConnection()
+                        ControlCenter.instance.getControlListener().onConfirmConnection()
                     }
                     dispose()
                 }

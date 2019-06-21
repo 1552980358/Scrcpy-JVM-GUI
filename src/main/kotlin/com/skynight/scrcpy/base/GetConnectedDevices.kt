@@ -26,7 +26,6 @@ class GetConnectedDevices private constructor() {
     private var rawAdbDeviceList: List<String> = runAdbGetList("devices")
 
     init {
-        println(rawAdbDeviceList.size)
         if (rawAdbDeviceList.size >= 2) {
             loadList@ for (i in rawAdbDeviceList) {
                 if (rawAdbDeviceList.indexOf(i) == 0) {
@@ -72,8 +71,6 @@ class GetConnectedDevices private constructor() {
         if (!deviceList.contains(device)) {
             return "NotFound"
         }
-
-        println(deviceStateList)
 
         // device
         // offline

@@ -59,7 +59,6 @@ class SelectDeviceWindow(commands: MutableList<String>, single: Boolean = true):
                 buttonGroup.add(radioButton)
                 radioButtonList.add(radioButton)
                 mainPanel.add(radioButton)
-                //radioButton.setSize(width, WidgetWithTextHeight)
                 radioButton.setBounds(0, height, width - 16, WidgetWithTextHeight)
                 radioButton.horizontalAlignment = JRadioButton.CENTER
                 height += WidgetWithTextHeight
@@ -69,7 +68,6 @@ class SelectDeviceWindow(commands: MutableList<String>, single: Boolean = true):
                 val checkBox = CheckBox(getConnectedDevices.getDeviceModel(i), i)
                 checkBoxList.add(checkBox)
                 mainPanel.add(checkBox)
-                //checkBox.setSize(width, WidgetWithTextHeight)
                 checkBox.setBounds(0, height, width - 16, WidgetWithTextHeight)
                 checkBox.horizontalAlignment = JCheckBox.CENTER
                 height += WidgetWithTextHeight
@@ -104,11 +102,8 @@ class SelectDeviceWindow(commands: MutableList<String>, single: Boolean = true):
 
                 for (i in commandList) {
                     try {
-                        //println(i.toMutableList())
-                        LogOutputWindow.takeLog("ConnectCommand: $i")
                         Runtime.getRuntime().exec(i)
                     } catch (e: Exception) {
-                        //e.printStackTrace()
                         LogOutputWindow.takeLog(e)
                     }
                 }
@@ -119,6 +114,4 @@ class SelectDeviceWindow(commands: MutableList<String>, single: Boolean = true):
         mainPanel.isVisible = true
         isVisible = true
     }
-
-
 }

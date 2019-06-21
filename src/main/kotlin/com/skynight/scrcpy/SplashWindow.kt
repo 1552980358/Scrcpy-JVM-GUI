@@ -73,7 +73,7 @@ class SplashWindow : JFrame() {
                 return@Thread
             }
 
-            ControlCenter.getInstance().getControlListener().passFileCheck()
+            ControlCenter.instance.getControlListener().passFileCheck()
             dispose()
             return@Thread
         }.start()

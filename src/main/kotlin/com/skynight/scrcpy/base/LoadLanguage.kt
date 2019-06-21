@@ -3,12 +3,13 @@ package com.skynight.scrcpy.base
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.skynight.scrcpy.LogOutputWindow
+import com.skynight.scrcpy.base.BaseIndex.Companion.LanguageDir
 import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
 import java.io.File
 import java.util.*
 
 class LoadLanguage {
-    private lateinit var languageList: MutableList<String>
+    private var languageList: MutableList<String>
     private lateinit var jsonObject: JsonObject
 
     private lateinit var locale: String
@@ -30,33 +31,16 @@ class LoadLanguage {
             return "$systemLanguage-r$systemRegion"
         }
 
-        val instance  by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED ) {
+        val instance by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED ) {
             LoadLanguage()
         }
-
-/*
-        @Volatile
-        private var instance: LoadLanguage? = null
-        @Synchronized
-        fun getInstance(): LoadLanguage {
-            if (instance == null) {
-                instance = LoadLanguage()
-            }
-            return instance as LoadLanguage
-        }
-
- */
     }
 
     init {
-        start()
-    }
-
-    fun start() {
         val file = File(System.getProperty("user.dir") + File.separator + "language")
         languageList = file.list().toMutableList()
 
-        val loadLanguages = Thread {
+        val loadLanguages = Thread {/*
             val json = JsonParser().parse(File(System.getProperty("user.dir") + File.separator + PackageFileList[10])
                 .inputStream().bufferedReader().readText()).asJsonObject
             for (i in json.get("Languages").asJsonArray) {
@@ -66,6 +50,25 @@ class LoadLanguage {
                     tmp.add(j.asString)
                 }
                 supportedLocale[i.asString] = tmp
+            }*/
+            val list = File(LanguageDir).list()
+            var currentLanguage: String
+            val tmp = mutableListOf<String>()
+            for (i in list) {
+                currentLanguage = "${i[0]}${i[1]}"
+                if (!supportedLanguages.contains(currentLanguage)) {
+                    if (supportedLanguages.size > 0) {
+                        supportedLocale[supportedLanguages.last()] = tmp
+                        LogOutputWindow.takeLog("Locale " + supportedLanguages.last() + ": " + supportedLocale[supportedLanguages.last()]!!.toString())
+                    }
+                    supportedLanguages.add(currentLanguage)
+                    tmp.clear()
+                }
+                tmp.add("${i[4]}${i[5]}")
+                if (list.indexOf(i) == list.lastIndex) {
+                    supportedLocale[supportedLanguages.last()] = tmp
+                    LogOutputWindow.takeLog("Locale " + supportedLanguages.last() + ": " + supportedLocale[supportedLanguages.last()]!!.toString())
+                }
             }
         }
         loadLanguages.start()
@@ -78,7 +81,9 @@ class LoadLanguage {
                 val language = json.get("language").asString
 
                 setLocale(language, region)
-                Thread { ControlCenter.getInstance().getControlListener().checkUserSave(true) }.start()
+                Thread {
+                    ControlCenter.instance.getControlListener().checkUserSave(true)
+                }.start()
             } catch (e: Exception) {
                 //e.printStackTrace()
                 LogOutputWindow.takeLog(e)
@@ -91,7 +96,7 @@ class LoadLanguage {
                         LogOutputWindow.takeLog(e)
                     }
                 }
-                Thread { ControlCenter.getInstance().getControlListener().checkUserSave(false) }.start()
+                Thread { ControlCenter.instance.getControlListener().checkUserSave(false) }.start()
             }
         } else {
             while (loadLanguages.isAlive) {
@@ -102,7 +107,7 @@ class LoadLanguage {
                     LogOutputWindow.takeLog(e)
                 }
             }
-            Thread { ControlCenter.getInstance().getControlListener().checkUserSave(false) }.start()
+            Thread { ControlCenter.instance.getControlListener().checkUserSave(false) }.start()
         }
     }
 

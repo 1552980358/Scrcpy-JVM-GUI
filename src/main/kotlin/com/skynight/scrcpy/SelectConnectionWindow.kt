@@ -55,7 +55,7 @@ class SelectConnectionWindow: JFrame("选择连接方式") {
         val jButton = Button("确定", 10,70, 264, 40)
         jPanel.add(jButton)
         jButton.addActionListener {
-            val controlCenter = ControlCenter.getInstance()
+            val controlCenter = ControlCenter.instance
             controlCenter.isWiredMethod = wired.isSelected
             controlCenter.getControlListener().onHandleConnectionMethod()
             dispose()
