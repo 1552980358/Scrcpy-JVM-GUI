@@ -9,6 +9,8 @@ import com.skynight.scrcpy.base.LoadLanguage
 import com.skynight.scrcpy.widgets.Button
 import com.skynight.scrcpy.widgets.Panel
 import java.awt.Toolkit
+import java.awt.event.ComponentEvent
+import java.awt.event.ComponentListener
 import java.io.File
 import java.io.FileWriter
 import javax.swing.JComboBox
@@ -93,6 +95,22 @@ class SelectLanguageWindow: JFrame() {
                 dispose()
             }.start()
         }
+
+        addComponentListener(object : ComponentListener {
+            override fun componentMoved(e: ComponentEvent?) {
+                setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
+            }
+
+            override fun componentResized(e: ComponentEvent?) {
+            }
+
+            override fun componentHidden(e: ComponentEvent?) {
+            }
+
+            override fun componentShown(e: ComponentEvent?) {
+            }
+
+        })
 
         isVisible = true
     }

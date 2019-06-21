@@ -96,9 +96,9 @@
 
 	"SelectConnectionWindow": {
 		"title": "设备连接向导",
-		"single_wired": "有线连接",
-		"single_wireless": "无线连接",
-		"confiem": "确定"
+		"wired": "有线连接",
+		"wireless": "无线连接",
+		"confirm": "确定"
 	},
 
 	"TestConnectionWindow": {

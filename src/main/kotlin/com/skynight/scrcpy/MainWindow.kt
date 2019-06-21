@@ -180,17 +180,18 @@ class MainWindow : JFrame() {
 
     private fun onConnect(): MutableList<String> {
 
-        val command = mutableListOf(
-            "cmd.exe",
-            "/c",
-            "start",
-            "cmd.exe",
-            "/c",
-            if (ControlCenter.instance.getConsoleless())
-                System.getProperty("user.dir") + File.separator + PackageFileList[7]
-            else
-                System.getProperty("user.dir") + File.separator + PackageFileList[6]
-        )
+        val command = if (ControlCenter.instance.getConsoleless()) {
+                mutableListOf(System.getProperty("user.dir") + File.separator + PackageFileList[7])
+            } else {
+                mutableListOf(
+                    "cmd.exe",
+                    "/c",
+                    "start",
+                    "cmd.exe",
+                    "/c",
+                    System.getProperty("user.dir") + File.separator + PackageFileList[6])
+            }
+
 
         for (i in CheckBoxes) {
             command.add(i.getArg())

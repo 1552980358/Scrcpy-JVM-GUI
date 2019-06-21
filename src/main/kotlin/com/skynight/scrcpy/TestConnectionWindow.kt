@@ -28,14 +28,12 @@ class TestConnectionWindow : JFrame() {
             }
 
             override fun componentResized(e: ComponentEvent?) {
-
             }
 
             override fun componentHidden(e: ComponentEvent?) {
             }
 
             override fun componentShown(e: ComponentEvent?) {
-
             }
 
         })
