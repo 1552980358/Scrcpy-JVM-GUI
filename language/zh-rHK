@@ -1,0 +1,112 @@
+{   
+
+    "SelectLanguageWindow" : {
+        "title": "選擇語言...",
+        "defult": "默認語言: zh-rTW",
+        "language": "語言",
+        "region": "地區",
+        "confirm": "確認"
+    },
+
+	"MainWindow": {
+		"title": "Scrcpy - JVM GUI",
+		"Menu": {
+			"about": "關於",
+			"devices": "設備",
+            "refresh": "刷新",
+            "newConnection": "連接新設備",
+			"scrcpy": "開始投屏",
+			"single": "單設備投屏",
+			"multi": "多設備同時投屏"
+		},
+		"DeviceInfo": {
+			"title": "~ 設備信息 ~",
+			"brand": "品牌: ",
+			"model": "型號: ",
+			"adb_id": "設備ADB ID: ",
+			"status": "設備狀態",
+			"type": "連接方式: ",
+			"wired": "USB有綫連接",
+			"wireless": "TCP/IP無綫橋接",
+			"statuses": [
+				"在綫",
+				"離綫",
+				"未驗證",
+				"已斷開"
+			]
+		},
+		"Tools": {
+			"title": "~ 附加選項 ~",
+			"fullscreen": "全屏顯示",
+			"touch_shown": "觸摸顯示",
+			"control": "滑鼠操控",
+			"frame_treat": "過期幀渲染",
+			"keep_front": "保持前端"
+		},
+		"BitRate": {
+			"title": "~ 投屏比特率 ~",
+			"default": "8M (默認)",
+			"custom": "自定義(單位M)"
+		}
+	},
+
+	"SplashWindow": {
+		"title": "啓動中, 請稍後...",
+		"check_file": "檢查檔案包...",
+		"check_file_fail": "檔案包檢查失敗!",
+		"check_md5": "檢查檔案MD5...",
+		"check_md5_fail": "檔案MD5檢查失敗!"
+	},
+
+	"ADBWiredWindow": {
+		"title": "USB有綫連接",
+		"step": "請與設備啓動ADB調試, 然後使用USB連接電腦\n開發者選項啓動方式:\n設置 → 關於{設備/手機} →\n\nMIUI\n - 多次點擊\"MIUI版本\" → 返回 → 更多設置 → 開發者選項\n原生/類原生 Pie\n - 多次點擊版本號 → 系統 → 高級 → 開發者選項\n",
+		"step_done": "已按步驟完成"
+	},
+
+	"ADBWirelessWindow": {
+		"title": "透過無綫局域網使用TCP/IP桥接",
+		"connect_fail": "失敗, 請手動打開並設置",
+		"succeed": "完成",
+		"fetch_fail": "拉取失敗, 請手動輸入\n",
+		"confirm": "確認",
+		"ip_input": "輸入的IP為: %s\n",
+		"fetch_succeed": "獲取成功: %s\n",
+		"connect_succeed": "使用無綫局域網連接設備成功",
+		"connect_failed": "請嘗試手動使用adb進行連接, 命令如下:\nadb connect %s:5555",
+
+		"steps": [
+            "1.請與設備啓動ADB調試, 然後使用USB連接電腦\n開發者選項啓動方式:\n設置 → 關於{設備/手機} →\n\nMIUI\n - 多次點擊\"MIUI版本\" → 返回 → 更多設置 → 開發者選項\n原生/類原生 Pie\n - 多次點擊版本號 → 系統 → 高級 → 開發者選項\n",
+            "2.請連接與電腦相同的無綫局域網\n",
+            "3.配置端口中...\n",
+            "4.正在獲取無綫局域網的IP地址...\n",
+            "5.請斷開USB連接",
+            "6.點擊下方按鈕完成"
+        ],
+
+		"steps_btn": [
+            "啓動無綫局域網(WiFi)設置",
+            "配置端口",
+            "獲取無綫局域網的IP地址",
+            "下一步",
+            "下一步",
+            "完成"
+        ]
+	},
+
+	"SelectConnectionWindow": {
+		"title": "設備連接精靈",
+		"wired": "USB有线连接",
+		"wireless": "無綫局域網TCP/IP橋接",
+		"confirm": "確認"
+	},
+
+	"TestConnectionWindow": {
+		"title": "啓動中, 請稍等...",
+		"connection_check": "檢查設備連接...",
+		"connection_check_fail": "連接檢測失敗!",
+		"connection_check_succeed": "檢測完成, 等待主程序加載完成...",
+		"time_remain": "剩餘%s秒"
+	}
+
+}

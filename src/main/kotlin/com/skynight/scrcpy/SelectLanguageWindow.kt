@@ -86,6 +86,8 @@ class SelectLanguageWindow: JFrame() {
                 fileWriter.flush()
                 fileWriter.close()
 
+                LoadLanguage.instance.setLocale(lang.selectedItem as String, reg.selectedItem as String)
+
                 ControlCenter.instance.getControlListener().checkUserSave(true)
 
                 dispose()

@@ -1,6 +1,7 @@
 package com.skynight.scrcpy
 
 import com.skynight.scrcpy.base.ControlCenter
+import com.skynight.scrcpy.base.LoadLanguage
 import com.skynight.scrcpy.widgets.Button
 import com.skynight.scrcpy.widgets.Panel
 import com.skynight.scrcpy.widgets.RadioButton
@@ -9,10 +10,12 @@ import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener
 import javax.swing.*
 
-class SelectConnectionWindow: JFrame("选择连接方式") {
+class SelectConnectionWindow: JFrame() {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
+        val loadLanguage = LoadLanguage.instance.getWindowStrings("SelectConnectionWindow")
 
+        title = loadLanguage.get("title").asString
         setSize(300, 160)
         isResizable = false
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
@@ -40,19 +43,19 @@ class SelectConnectionWindow: JFrame("选择连接方式") {
         add(jPanel)
 
         val buttonGroup = ButtonGroup()
-        val wired = RadioButton("有线连接")
+        val wired = RadioButton(loadLanguage.get("wired").asString)
         buttonGroup.add(wired)
         jPanel.add(wired)
         wired.isSelected = true
         wired.setBounds(0,10, 284, 30)
         wired.horizontalAlignment = JRadioButton.CENTER
-        val wireless = RadioButton("无线连接")
+        val wireless = RadioButton(loadLanguage.get("wireless").asString)
         buttonGroup.add(wireless)
         jPanel.add(wireless)
         wireless.horizontalAlignment = JRadioButton.CENTER
         wireless.setBounds(0,40, 284, 30)
 
-        val jButton = Button("确定", 10,70, 264, 40)
+        val jButton = Button(loadLanguage.get("confirm").asString, 10,70, 264, 40)
         jPanel.add(jButton)
         jButton.addActionListener {
             val controlCenter = ControlCenter.instance

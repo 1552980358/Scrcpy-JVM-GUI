@@ -4,7 +4,6 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.skynight.scrcpy.LogOutputWindow
 import com.skynight.scrcpy.base.BaseIndex.Companion.LanguageDir
-import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
 import java.io.File
 import java.util.*
 
@@ -13,8 +12,8 @@ class LoadLanguage {
     private lateinit var jsonObject: JsonObject
 
     private lateinit var locale: String
-    lateinit var language: String
-    lateinit var region: String
+    private lateinit var language: String
+    private lateinit var region: String
 
     val supportedLanguages = mutableListOf<String>()
     val supportedLocale = mutableMapOf<String, MutableList<String>>()
