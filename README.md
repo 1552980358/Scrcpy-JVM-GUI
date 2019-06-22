@@ -26,6 +26,13 @@ Deveolping Language
     Kotlin
 ```
 
+Supported Platform
+-----------
+```
+    Windows
+    Linux (Future will be supported)
+```
+
 Run with source code
 -----------
 1. Download and install Intellij Idea

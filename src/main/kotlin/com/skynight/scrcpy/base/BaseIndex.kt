@@ -11,7 +11,7 @@ class BaseIndex {
         const val DefaultLocale = "zh-rCN"
         val LanguageDir = System.getProperty("user.dir") + separator + "language"
         val DataSave = System.getProperty("user.dir") + separator + "save"
-        const val SaveConsoleSetting = "{\n\t\"LogOutputWindow\": %s,\n\t\"Consoleless\": %s\n}\n"
+        const val SaveConsoleSetting = "{\n\t\"LogOutputWindow\": %s,\n\t\"Consoleless\": %s\n\t\"Tips\":%s\n}\n"
         const val SaveLocale = "{\n\t\"language\": \"%s\", \n\t\"region\": \"%s\"\n}"
 
         val PackageFileList = arrayListOf(

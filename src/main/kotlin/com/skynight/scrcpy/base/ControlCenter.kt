@@ -7,8 +7,6 @@ import com.skynight.scrcpy.base.BaseIndex.Companion.DataSave
 import com.skynight.scrcpy.base.BaseIndex.Companion.SaveConsoleSetting
 import java.io.File
 import java.io.FileWriter
-import java.lang.ref.SoftReference
-import kotlin.math.log
 
 class ControlCenter {
     @Volatile
@@ -32,29 +30,23 @@ class ControlCenter {
     private var logOutputWindow = true
     @Volatile
     private var consoleless = false
+    @Volatile
+    private var tips = true
 
     companion object {
-        /*
-        private var instance: ControlCenter? = null
-        @Synchronized
-        fun getInstance(): ControlCenter {
-        if (instance == null) {
-            instance = ControlCenter()
-        }
-            return instance as ControlCenter
-        }*/
         val instance by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             ControlCenter()
         }
     }
 
     init {
-        val file = File(DataSave + File.separator + "ConsoleSetting")
+        val file = File(DataSave + File.separator + "CustomSettings")
         try {
             if (file.exists()) {
                 val json = JsonParser().parse(file.inputStream().bufferedReader().readText()).asJsonObject
                 logOutputWindow = json.get("LogOutputWindow").asBoolean
                 consoleless = json.get("Consoleless").asBoolean
+                tips = json.get("Tips").asBoolean
             } else {
                 changeConsoleSetting()
             }
@@ -75,13 +67,20 @@ class ControlCenter {
         return this.logOutputWindow
     }
 
+    fun setConsoleless(boolean: Boolean) {
+        this.consoleless = boolean
+        changeConsoleSetting()
+    }
     fun getConsoleless(): Boolean {
         return this.consoleless
     }
 
-    fun setConsoleless(boolean: Boolean) {
-        this.consoleless = boolean
+    fun setTips(boolean: Boolean) {
+        this.tips = boolean
         changeConsoleSetting()
+    }
+    fun getTips(): Boolean {
+        return this.tips
     }
 
     private fun changeConsoleSetting() {
@@ -90,7 +89,7 @@ class ControlCenter {
             if (!file.exists())
                 file.createNewFile()
             val fileWriter = FileWriter(file, false)
-            val s = String.format(SaveConsoleSetting, logOutputWindow, consoleless)
+            val s = String.format(SaveConsoleSetting, logOutputWindow, consoleless, tips)
             LogOutputWindow.takeLog("$file changed as:\n$s")
             fileWriter.write(s)
             fileWriter.flush()

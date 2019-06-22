@@ -47,7 +47,13 @@
 			"title": "~ 投屏比特率 ~",
 			"default": "8M (默认)",
 			"custom": "自定义(单位M)"
-		}
+		},
+        "SaveLoad": {
+            "title" : "~ 其他设置 ~",
+            "LogOutputWindow": "显示Log输出窗口",
+            "Consoleless": "隐藏命令提示符窗口",
+            "Tips": "显示操作小提示"
+        }
 	},
 
 	"SplashWindow": {
@@ -104,7 +110,7 @@
 	"TestConnectionWindow": {
 		"title": "启动中, 请稍后...",
 		"connection_check": "检查设备连接...",
-		"connection_check_fail": "设备连接检擦失败!",
+		"connection_check_fail": "设备连接检查失败!",
 		"connection_check_succeed": "检查完成, 等待主程序加载...",
 		"time_remain": "还剩下%s秒"
 	}

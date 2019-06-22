@@ -167,13 +167,17 @@ class MainWindow : JFrame() {
             //onConnect()
             Thread {
                 SelectDeviceWindow(onConnect())
-                ControlKeyWindow.getInstance().showFrame()
+                if (ControlCenter.instance.getTips()) {
+                    ControlKeyWindow.instance.showFrame()
+                }
             }.start()
         }
         connectDevices.addActionListener {
             Thread {
                 SelectDeviceWindow(onConnect(), false)
-                ControlKeyWindow.getInstance().showFrame()
+                if (ControlCenter.instance.getTips()) {
+                    ControlKeyWindow.instance.showFrame()
+                }
             }.start()
         }
     }
@@ -227,10 +231,11 @@ class MainWindow : JFrame() {
     }
 
     private fun getSaveLoad() {
-        val panel = Panel(width * 2 / 3, 0, width / 3 - 16, 85)
+        val saveLoad = jsonObject.get("SaveLoad").asJsonObject
+        val panel = Panel(width * 2 / 3, 0, width / 3 - 16, 120)
         mainPanel.add(panel)
-        panel.border = BorderFactory.createTitledBorder("~ 提示符 ~")
-        val logOutputWindow = CheckBox("启用Log输出窗口", ControlCenter.instance.getLogOutputWindow())
+        panel.border = BorderFactory.createTitledBorder(saveLoad.get("title").asString)
+        val logOutputWindow = CheckBox(saveLoad.get("LogOutputWindow").asString, ControlCenter.instance.getLogOutputWindow())
         panel.add(logOutputWindow)
         logOutputWindow.addItemListener {
             ControlCenter.instance.setLogOutputWindow(logOutputWindow.isSelected)
@@ -241,10 +246,17 @@ class MainWindow : JFrame() {
                 logOutputWindow.isSelected = isVisible
             }
         }
-        val consoleless = CheckBox("隐藏scrcpy窗口", ControlCenter.instance.getConsoleless())
+
+        val consoleless = CheckBox(saveLoad.get("Consoleless").asString, ControlCenter.instance.getConsoleless())
         panel.add(consoleless)
         consoleless.addActionListener {
             ControlCenter.instance.setConsoleless(consoleless.isSelected)
+        }
+
+        val tips = CheckBox(saveLoad.get("Tips").asString, ControlCenter.instance.getTips())
+        panel.add(tips)
+        tips.addActionListener {
+            ControlCenter.instance.setTips(consoleless.isSelected)
         }
     }
 
