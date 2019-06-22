@@ -50,13 +50,13 @@ class ControlCenter {
                 logOutputWindow = json.get("LogOutputWindow").asBoolean
                 consoleless = json.get("Consoleless").asBoolean
                 tips = json.get("Tips").asBoolean
-                println(logOutputWindow.toString() + consoleless.toString() + tips.toString())
             } else {
                 changeConsoleSetting()
             }
             LogOutputWindow.instance.isVisible = logOutputWindow
             LogOutputWindow.takeLog("LogOutputWindow: $logOutputWindow")
                 .takeLog("Consoleless: $consoleless")
+                .takeLog("Tips: $tips")
                 .newLine()
         } catch (e: Exception) {
             e.printStackTrace()
