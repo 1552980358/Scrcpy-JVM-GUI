@@ -46,6 +46,7 @@ class TestConnectionWindow : JFrame() {
         panel.setSize(width, height)
 
         val content = JLabel(jsonObject.get("connection_check").asString, JLabel.CENTER)
+        LogOutputWindow.takeLog("Connection Check Start")
         content.setBounds(0, 0, width - 16, 15)
         panel.add(content)
         panel.isVisible = true
@@ -54,7 +55,7 @@ class TestConnectionWindow : JFrame() {
 
             if (!checkAdbConnect()) {
                 content.text = jsonObject.get("connection_check_fail").asString
-                LogOutputWindow.takeLog("Test Connection Fail")
+                LogOutputWindow.takeLog("Connection Check Fail")
                 exitButton(this, panel)
                 return@Thread
             }
@@ -68,6 +69,7 @@ class TestConnectionWindow : JFrame() {
             jProgressBar.isVisible = true
 
             title = jsonObject.get("connection_check_succeed").asString
+            LogOutputWindow.takeLog("Connection Check Pass")
 
             ControlCenter.instance.getControlListener().passAdbCheck()
 
@@ -78,6 +80,7 @@ class TestConnectionWindow : JFrame() {
                 } catch (e: Exception) {
                     //
                 }
+                LogOutputWindow.takeLog("${4-i}seconds left")
                 jProgressBar.value = i
             }
             dispose()

@@ -64,7 +64,7 @@ class MainWindow : JFrame() {
     init {
         Thread {
             try {
-                Thread.sleep(3000)
+                Thread.sleep(3200)
             } catch (e: Exception) {
 
             }
@@ -88,11 +88,27 @@ class MainWindow : JFrame() {
         contentPane = mainPanel
         mainPanel.isVisible = false
 
-        Thread { setMenu() }.start()
-        Thread { setBitRate() }.start()
-        Thread { setTools() }.start()
-        Thread { getDeviceInfo() }.start()
-        Thread { getSaveLoad() }.start()
+        LogOutputWindow.takeLog(" - MainWindow - ").newLine()
+        Thread {
+            LogOutputWindow.takeLog("Set Menu Start")
+            setMenu()
+        }.start()
+        Thread {
+            LogOutputWindow.takeLog("Set BitRate Start")
+            setBitRate()
+        }.start()
+        Thread {
+            LogOutputWindow.takeLog("Set Tools Start")
+            setTools()
+        }.start()
+        Thread {
+            LogOutputWindow.takeLog("Set Device Info Start")
+            getDeviceInfo()
+        }.start()
+        Thread {
+            LogOutputWindow.takeLog("Get Saved Load Start")
+            getSaveLoad()
+        }.start()
 
         mainPanel.isVisible = true
     }
@@ -256,7 +272,7 @@ class MainWindow : JFrame() {
         val tips = CheckBox(saveLoad.get("Tips").asString, ControlCenter.instance.getTips())
         panel.add(tips)
         tips.addActionListener {
-            ControlCenter.instance.setTips(consoleless.isSelected)
+            ControlCenter.instance.setTips(tips.isSelected)
         }
     }
 
@@ -430,7 +446,6 @@ class MainWindow : JFrame() {
             bitRate = 4
         }
         bitRatePanel3.add(customBitRate)
-        //customBitRate.setSize(100, 26)
         bitRatePanel3.isVisible = true
     }
 

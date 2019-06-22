@@ -116,7 +116,7 @@ class LoadLanguage {
         this.setLocale("$language-r$region")
     }
     fun setLocale(locale: String) {
-        LogOutputWindow.takeLog(locale)
+        LogOutputWindow.takeLog("Set Locale $locale")
         this.locale = locale
         loadLocaleFile()
     }

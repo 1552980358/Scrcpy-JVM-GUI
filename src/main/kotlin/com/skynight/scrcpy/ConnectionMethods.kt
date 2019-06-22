@@ -137,8 +137,13 @@ class ADBWirelessWindow : JFrame() {
                             LogOutputWindow.takeLog(e)
                         }
 
-                        /* 192.168.1.[0-9]{1,3} */
-                        if (!ip.toString().matches("192.168.1.[0-9]{1,3}".toRegex())) {
+                        /* 192.168.1.2[0-5]{2} 200-255 */
+                        /* 192.168.1.1[0-9]{1,2} 100-199 */
+                        /* 192.168.1.[1-9][0-9] 10-99 */
+                        /* 192.168.1.[0-9]  0-9  */
+                        if (!ip.toString().matches("^(192.168.1.[0-9])$".toRegex()) ||
+                            !ip.toString().matches("^(192.168.1.1[0-9]{1,2})$".toRegex()) ||
+                            !ip.toString().matches("^(192.168.1.2[0-9]{2})$".toRegex())) {
                             jTextArea.append(jsonObject.get("fetch_fail").asString)
                             val jTextField = JTextField()
                             jPanel.add(jTextField)

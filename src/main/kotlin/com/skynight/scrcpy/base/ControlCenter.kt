@@ -14,7 +14,7 @@ class ControlCenter {
 
     fun setControlListener(controlListener: ControlListener) {
         this.controlListener = controlListener
-        LogOutputWindow.takeLog("startLoading")
+        LogOutputWindow.takeLog("StartLoading")
         LoadLanguage.instance
     }
 
@@ -42,19 +42,25 @@ class ControlCenter {
     init {
         val file = File(DataSave + File.separator + "CustomSettings")
         try {
+            LogOutputWindow.instance
             if (file.exists()) {
-                val json = JsonParser().parse(file.inputStream().bufferedReader().readText()).asJsonObject
+                val jsonFile = file.inputStream().bufferedReader().readText()
+                LogOutputWindow.takeLog("Read Custom Setting\n$jsonFile")
+                val json = JsonParser().parse(jsonFile).asJsonObject
                 logOutputWindow = json.get("LogOutputWindow").asBoolean
                 consoleless = json.get("Consoleless").asBoolean
                 tips = json.get("Tips").asBoolean
+                println(logOutputWindow.toString() + consoleless.toString() + tips.toString())
             } else {
                 changeConsoleSetting()
             }
             LogOutputWindow.instance.isVisible = logOutputWindow
-            LogOutputWindow.takeLog("logOutputWindow: $logOutputWindow")
-                .takeLog("consoleless: $consoleless")
+            LogOutputWindow.takeLog("LogOutputWindow: $logOutputWindow")
+                .takeLog("Consoleless: $consoleless")
+                .newLine()
         } catch (e: Exception) {
-            LogOutputWindow.instance.takeLog(e)
+            e.printStackTrace()
+            LogOutputWindow.takeLog(e)
         }
     }
 
@@ -84,7 +90,7 @@ class ControlCenter {
     }
 
     private fun changeConsoleSetting() {
-        val file = File(DataSave + File.separator + "ConsoleSetting")
+        val file = File(DataSave + File.separator + "CustomSettings")
         try {
             if (!file.exists())
                 file.createNewFile()

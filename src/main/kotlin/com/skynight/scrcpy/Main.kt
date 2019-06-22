@@ -21,7 +21,7 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
     ControlCenter.instance.setControlListener(object : ControlListener {
         override fun checkUserSave(splash: Boolean) {
             super.checkUserSave(splash)
-            LogOutputWindow.takeLog("checkUserSave  $splash")
+            LogOutputWindow.takeLog("Launch Procee: CheckUserSave  $splash").newLine()
             if (splash) {
                 SplashWindow()
             } else {
@@ -31,29 +31,29 @@ fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
 
         override fun passFileCheck() {
             super.passFileCheck()
-            LogOutputWindow.takeLog("passFileCheck")
+            LogOutputWindow.takeLog("Launch Procee: PassFileCheck").newLine()
             SelectConnectionWindow()
         }
 
         override fun onHandleConnectionMethod() {
             super.onHandleConnectionMethod()
             if (ControlCenter.instance.isWiredMethod) {
-                LogOutputWindow.takeLog("onHandleConnectionMethod Wired")
+                LogOutputWindow.takeLog("Launch Procee: OnHandleConnectionMethod Wired").newLine()
                 ADBWiredWindow()
             } else {
-                LogOutputWindow.takeLog("onHandleConnectionMethod Wireless")
+                LogOutputWindow.takeLog("Launch Procee: OnHandleConnectionMethod Wireless").newLine()
                 ADBWirelessWindow()
             }
         }
 
         override fun onConfirmConnection() {
             super.onConfirmConnection()
-            LogOutputWindow.takeLog("onConfirmConnection")
+            LogOutputWindow.takeLog("Launch Procee: OnConfirmConnection").newLine()
             TestConnectionWindow()
         }
         override fun passAdbCheck() {
             super.passAdbCheck()
-            LogOutputWindow.takeLog("passAdbCheck")
+            LogOutputWindow.takeLog("Launch Procee: PassAdbCheck").newLine()
             MainWindow.instance
         }
     })

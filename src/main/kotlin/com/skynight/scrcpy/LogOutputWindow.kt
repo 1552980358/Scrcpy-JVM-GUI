@@ -18,12 +18,16 @@ class LogOutputWindow: JFrame("Logging") {
             LogOutputWindow()
         }
         private val jTextArea = JTextArea()
+
         fun takeLog(log: Exception): LogOutputWindow {
             return takeLog(log.toString())
         }
         fun takeLog(log: CharSequence): LogOutputWindow {
             jTextArea.append("$log\n")
             return instance
+        }
+        fun newLine(): LogOutputWindow {
+            return takeLog("")
         }
     }
 
@@ -83,11 +87,15 @@ class LogOutputWindow: JFrame("Logging") {
             }
         })
     }
+
     fun takeLog(log: Exception): LogOutputWindow? {
         return Companion.takeLog(log)
     }
-    fun takeLog(log: CharSequence): LogOutputWindow? {
+    fun takeLog(log: CharSequence): LogOutputWindow {
         return Companion.takeLog(log)
+    }
+    fun newLine(): LogOutputWindow {
+        return Companion.newLine()
     }
 
     override fun setVisible(b: Boolean) {

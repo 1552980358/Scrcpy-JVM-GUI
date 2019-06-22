@@ -74,7 +74,6 @@ class SelectLanguageWindow: JFrame() {
         mainPanel.add(confirm)
         confirm.addActionListener {
             Thread {
-                //println(lang.selectedItem as String + "-r" + reg.selectedItem as String)
                 LogOutputWindow.takeLog("Language: " + lang.selectedItem as String + "-r" + reg.selectedItem as String)
 
                 val file = File(DataSave, "locale")

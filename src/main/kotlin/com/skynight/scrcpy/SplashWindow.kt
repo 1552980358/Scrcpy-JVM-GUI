@@ -59,6 +59,8 @@ class SplashWindow : JFrame() {
 
         Thread {
 
+            LogOutputWindow.takeLog("File Check Start")
+
             if (!checkFiles()) {
                 content.text = jsonObject.get("check_file_fail").asString
                 exitButton(this, panel)
@@ -68,11 +70,12 @@ class SplashWindow : JFrame() {
             content.text =jsonObject.get("check_md5").asString
 
             if (!checkMD5Sum()) {
-                content.text = jsonObject.get("check_md5_fail").asString/*jsonObject.get("check_file_fail").asString*/
+                content.text = jsonObject.get("check_md5_fail").asString
                 exitButton(this, panel)
                 return@Thread
             }
 
+            LogOutputWindow.takeLog("Splash Check Pass").newLine()
             ControlCenter.instance.getControlListener().passFileCheck()
             dispose()
             return@Thread
@@ -83,12 +86,13 @@ class SplashWindow : JFrame() {
         val dir = System.getProperty("user.dir") + File.separator
         for (i in PackageFileList) {
             val file = File(dir + i)
-            LogOutputWindow.takeLog("CheckFile$file")
+            LogOutputWindow.takeLog("File Check$file")
             if (!file.exists()) {
-                LogOutputWindow.takeLog("CheckFile Error at $i")
+                LogOutputWindow.takeLog("File Check Error at $i").newLine()
                 return false
             }
         }
+        LogOutputWindow.takeLog("File Check Pass").newLine()
         return true
     }
 
@@ -96,12 +100,13 @@ class SplashWindow : JFrame() {
         val dir = System.getProperty("user.dir") + File.separator
         for (i in PackageFileList) {
             val file = File(dir + i)
-            LogOutputWindow.takeLog("CheckMD5 ${file.path}: ${PackageFilesMD5[i]}")
+            LogOutputWindow.takeLog("MD5 Check ${file.path}: ${PackageFilesMD5[i]}")
             if (PackageFilesMD5[i] != DigestUtils.md5Hex(FileInputStream(file))) {
-                LogOutputWindow.takeLog("CheckMD5 Error at $i")
+                LogOutputWindow.takeLog("MD5 Check Error at $i").newLine()
                 return false
             }
         }
+        LogOutputWindow.takeLog("MD5 Check Pass").newLine()
         return true
     }
 
