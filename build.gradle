@@ -11,6 +11,14 @@ version "Beta-${gitCommits}"
 
 sourceCompatibility = 1.8
 
+processResources {
+    def properties = ['version': project.version]
+    inputs.properties(properties)
+    filesMatching('version.properties') {
+        expand(properties)
+    }
+}
+
 repositories {
     mavenCentral()
 }

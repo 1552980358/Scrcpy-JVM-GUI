@@ -1,8 +1,6 @@
 package com.skynight.scrcpy
 
-import com.skynight.scrcpy.base.BaseIndex
 import com.skynight.scrcpy.base.ControlCenter
-import java.io.File
 
 fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
     //test()
@@ -83,11 +81,18 @@ interface ControlListener {
 
 }
 
+@Suppress("unused")
+class Main
+
 /* Test Program Fun */
 @Suppress("unused")
 fun test() {
-
-    Runtime.getRuntime().exec(System.getProperty("user.dir") + File.separator + BaseIndex.PackageFileList[7])
+    /*
+    val properties = Properties()
+    properties.load(Main::class.java.classLoader.getResourceAsStream("version.properties"))
+    print(properties.getProperty("version"))
+    */
+    //Runtime.getRuntime().exec(System.getProperty("user.dir") + File.separator + BaseIndex.PackageFileList[7])
 
 /*
     val locale = Locale.getDefault()

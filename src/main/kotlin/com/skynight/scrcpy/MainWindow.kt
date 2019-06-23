@@ -16,6 +16,7 @@ import java.awt.Toolkit
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.io.File
+import java.util.*
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JTextField
@@ -123,6 +124,11 @@ class MainWindow : JFrame() {
         val about = JMenu(menuObject.get("about").asString)
         jMenuBar.add(about)
         about.setMnemonic('A')
+        val properties = Properties()
+        properties.load(MainWindow::class.java.classLoader.getResourceAsStream("version.properties"))
+        val version = JMenuItem(menuObject.get("version").asString + properties.getProperty("version"))
+        version.background = Color.WHITE
+        about.add(version)
 
         val deviceJMenu = JMenu(menuObject.get("devices").asString)
         deviceJMenu.mnemonic = KeyEvent.VK_D

@@ -12,6 +12,7 @@
 		"title": "Scrcpy - JVM GUI",
 		"Menu": {
 			"about": "關於",
+			"version": "版本 ",
 			"devices": "設備",
             "refresh": "刷新",
             "newConnection": "連接新設備",

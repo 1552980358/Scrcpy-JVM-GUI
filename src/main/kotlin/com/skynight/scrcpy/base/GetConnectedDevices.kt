@@ -1,5 +1,7 @@
 package com.skynight.scrcpy.base
 
+import com.skynight.scrcpy.LogOutputWindow
+
 
 class GetConnectedDevices private constructor() {
     companion object {
@@ -86,22 +88,47 @@ class GetConnectedDevices private constructor() {
     }
 
     fun getDeviceSDK(device: String): String {
-        return runAdbGetList("-s $device shell getprop ro.build.version.sdk").first()
+        return try {
+            runAdbGetList("-s $device shell getprop ro.build.version.sdk").first()
+        } catch (e: Exception) {
+            LogOutputWindow.takeLog("GetDeviceSDK: $e")
+            ""
+        }
     }
 
     fun getDeviceBrand(device: String): String {
-        return runAdbGetList("-s $device shell getprop ro.product.vendor.brand").first()
+        return try {
+            runAdbGetList("-s $device shell getprop ro.product.vendor.brand").first()
+        } catch (e: Exception) {
+            LogOutputWindow.takeLog("GetDeviceBrand: $e")
+            ""
+        }
     }
 
     fun getDeviceModel(device: String): String {
-        return runAdbGetList("-s $device shell getprop ro.product.vendor.model").first()
+        return try {
+            runAdbGetList("-s $device shell getprop ro.product.vendor.model").first()
+        } catch (e: Exception) {
+            LogOutputWindow.takeLog("GetDeviceModel: $e")
+            ""
+        }
     }
 
     fun getDeviceImei(device: String): String {
-        return runAdbGetList("-s $device shell \"service call iphonesubinfo 1 | grep -o \'[0-9a-f]\\{8\\} \' | tail -n+3 | while read a; do echo -n \\\\u\${a:4:4}\\\\u\${a:0:4}; done\"").first()
+        return try {
+            runAdbGetList("-s $device shell \"service call iphonesubinfo 1 | grep -o \'[0-9a-f]\\{8\\} \' | tail -n+3 | while read a; do echo -n \\\\u\${a:4:4}\\\\u\${a:0:4}; done\"").first()
+        } catch (e: Exception) {
+            LogOutputWindow.takeLog("GetDeviceImei: $e")
+            ""
+        }
     }
 
     fun getDeviceAndroidVersion(device: String): String {
-        return runAdbGetList("-s $device shell getprop ro.build.version.release").first()
+        return try {
+            runAdbGetList("-s $device shell getprop ro.build.version.release").first()
+        } catch (e: Exception) {
+            LogOutputWindow.takeLog("GetDeviceAndroidVersion: $e")
+            ""
+        }
     }
 }
