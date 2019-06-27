@@ -3,7 +3,6 @@ package com.skynight.scrcpy
 import com.skynight.scrcpy.base.ControlCenter
 
 fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
-    //test()
     //SelectLanguageWindow()
 
     /* Unit Test */
@@ -79,68 +78,4 @@ interface ControlListener {
 
     }
 
-}
-
-@Suppress("unused")
-class Main
-
-/* Test Program Fun */
-@Suppress("unused")
-fun test() {
-    /*
-    val properties = Properties()
-    properties.load(Main::class.java.classLoader.getResourceAsStream("version.properties"))
-    print(properties.getProperty("version"))
-    */
-    //Runtime.getRuntime().exec(System.getProperty("user.dir") + File.separator + BaseIndex.PackageFileList[7])
-
-/*
-    val locale = Locale.getDefault()
-    println(locale.language)
-    println(locale.country)
-*/
-/*
-    val path = System.getProperty("user.dir") + File.separator + "package"
-    for (i in File(path).list()) {
-        val f = File(path + File.separator + i)
-        println(f.path)
-        println(DigestUtils.md5Hex(FileInputStream(f)))
-    }
-*/
-    /*
-    if (SystemTray.isSupported()) {
-        val systemTray = SystemTray.getSystemTray()
-        val trayIcon = TrayIcon(
-            Toolkit.getDefaultToolkit().createImage("icons/MainFrame.jpg"),
-            "嘤嘤嘤"
-        )
-        trayIcon.isImageAutoSize = true
-        trayIcon.toolTip = "这里是状态栏提示"
-        systemTray.add(trayIcon)
-        trayIcon.displayMessage(
-            "这里是标题",
-            "狐狸瑟瑟发抖",
-            TrayIcon.MessageType.INFO
-        )
-
-    }
-
-     */
-    /*
-    GetConnectedDevices.reGetConnectedDevices()
-    for (i in GetConnectedDevices.getInstance().getDeviceList()) {
-        println("$i = ${GetConnectedDevices.getInstance().getDeviceStateList()[i]}")
-        println(GetConnectedDevices.getInstance().getDeviceBrand(i))
-        println(GetConnectedDevices.getInstance().getDeviceModel(i))
-        println(GetConnectedDevices.getInstance().getDeviceSDK(i))
-        println(GetConnectedDevices.getInstance().getDeviceImei(i))
-    }
-*/
-    /*
-    val file = File(System.getProperty("user.dir") + File.separator + LoadJson.path)
-    for (i in file.list()) {
-        println(i)
-    }
-
-     */
 }
