@@ -3,6 +3,7 @@ package com.skynight.scrcpy
 import com.google.gson.JsonObject
 import com.skynight.scrcpy.base.*
 import com.skynight.scrcpy.widgets.Button
+import com.skynight.scrcpy.widgets.Panel
 import java.awt.Color
 import java.awt.Toolkit
 import java.awt.event.ComponentEvent
@@ -41,15 +42,14 @@ class ADBWiredWindow : JFrame() {
 
         })
 
-        val jPanel = JPanel()
-        add(jPanel)
-        jPanel.isVisible = false
-        jPanel.background = Color.WHITE
-        jPanel.layout = null
-        jPanel.setSize(350, 300)
+        val panel = Panel(width, height, null)
+        add(panel)
+        panel.isVisible = false
         val jTextArea = JTextArea(jsonObject.get("step").asString)
-        jPanel.add(jTextArea)
+        panel.add(jTextArea)
         jTextArea.isEditable = false
+        jTextArea.background = ControlCenter.instance.getBGColor()
+        jTextArea.foreground = ControlCenter.instance.getFGColor()
         jTextArea.setBounds(5, 0, 350, 184)
 
         val jButton = Button(jsonObject.get("step_done").asString, 10, 200, 310, 50)
@@ -59,9 +59,9 @@ class ADBWiredWindow : JFrame() {
             }
             dispose()
         }
-        jPanel.add(jButton)
+        panel.add(jButton)
 
-        jPanel.isVisible = true
+        panel.isVisible = true
     }
 }
 
@@ -78,26 +78,25 @@ class ADBWirelessWindow : JFrame() {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         isVisible = true
 
-        val jPanel = JPanel()
-        add(jPanel)
-        jPanel.isVisible = false
-        jPanel.background = Color.WHITE
-        jPanel.layout = null
-        jPanel.setSize(350, 300)
+        val panel = Panel(width, height, null)
+        add(panel)
+        panel.isVisible = false
 
         @Suppress("LocalVariableName") val ADBWirelessStepsText = jsonObject.get("steps").asJsonArray
         @Suppress("LocalVariableName") val ADBWirelessStepsBtn = jsonObject.get("steps_btn").asJsonArray
 
         var page = 0
         val jTextArea = JTextArea(ADBWirelessStepsBtn[0].toString())
-        jPanel.add(jTextArea)
+        panel.add(jTextArea)
         jTextArea.isEditable = false
+        jTextArea.background = ControlCenter.instance.getBGColor()
+        jTextArea.foreground = ControlCenter.instance.getFGColor()
         jTextArea.setBounds(5, 0, 350, 150)
 
         // IP 抓取 adb shell ip route list table 0 | grep "local 192.168."
         // 跳转wifi adb shell am start com.android.settings/.wifi.WifiPickerActivity
         val jButton = Button(ADBWirelessStepsBtn[0].toString(), 10, 200, 310, 50)
-        jPanel.add(jButton)
+        panel.add(jButton)
         jButton.addActionListener {
             page++
             jTextArea.text = ADBWirelessStepsText[page].asString
@@ -146,11 +145,13 @@ class ADBWirelessWindow : JFrame() {
                             !ip.toString().matches("^(192.168.1.2[0-9]{2})$".toRegex())) {
                             jTextArea.append(jsonObject.get("fetch_fail").asString)
                             val jTextField = JTextField()
-                            jPanel.add(jTextField)
+                            panel.add(jTextField)
+                            jTextField.background = ControlCenter.instance.getBGColor()
+                            jTextField.foreground = ControlCenter.instance.getFGColor()
                             jTextField.setBounds(5, 150, 250, 25)
 
                             val confirm = Button(jsonObject.get("confirm").asString, 255, 150, 70, 25)
-                            jPanel.add(confirm)
+                            panel.add(confirm)
                             confirm.isVisible = false
                             confirm.addActionListener {
                                 ip.clear()
@@ -175,7 +176,7 @@ class ADBWirelessWindow : JFrame() {
                 }
             }
         }
-        jPanel.isVisible = true
+        panel.isVisible = true
     }
 
     private fun connectToIp(ip: String, jTextArea: JTextArea) {

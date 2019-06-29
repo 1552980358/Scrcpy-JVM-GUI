@@ -1,6 +1,7 @@
 package com.skynight.scrcpy.widgets
 
 import com.skynight.scrcpy.base.BaseIndex
+import com.skynight.scrcpy.base.ControlCenter
 import java.awt.Color
 import javax.swing.ImageIcon
 import javax.swing.JCheckBox
@@ -24,7 +25,8 @@ class CheckBox: JCheckBox {
     }
 
     constructor(): super() {
-        background = Color.WHITE
+        background = ControlCenter.instance.getBGColor()
+        foreground = ControlCenter.instance.getFGColor()
         icon = ImageIcon("icons/CheckBox_UnSelected.png")
         selectedIcon = ImageIcon("icons/CheckBox_Selected.png")
         isFocusPainted = false

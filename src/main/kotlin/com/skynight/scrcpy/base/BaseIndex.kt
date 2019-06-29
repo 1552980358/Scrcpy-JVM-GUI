@@ -11,8 +11,28 @@ class BaseIndex {
         const val DefaultLocale = "zh-rCN"
         val LanguageDir = System.getProperty("user.dir") + separator + "language"
         val DataSave = System.getProperty("user.dir") + separator + "save"
-        const val SaveConsoleSetting = "{\n\t\"LogOutputWindow\": %s,\n\t\"Consoleless\": %s,\n\t\"Tips\":%s\n}\n"
-        const val SaveLocale = "{\n\t\"language\": \"%s\", \n\t\"region\": \"%s\"\n}"
+        const val SaveConsoleSetting = "{\n" +
+                "\t\"LogOutputWindow\": %s,\n" +
+                "\t\"Consoleless\": %s,\n" +
+                "\t\"Tips\":%s\n" +
+                "}"
+        const val SaveLocale = "{\n" +
+                "\t\"language\": \"%s\", \n" +
+                "\t\"region\": \"%s\"\n" +
+                "}"
+        const val SaveColor = "{\n" +
+                "\t\"BGColor\"= {\n" +
+                "\t\t\"R\"= \"%s\",\n" +
+                "\t\t\"G\"= \"%s\",\n" +
+                "\t\t\"B\"= \"%s\"\n" +
+                "\t},\n" +
+                "\t\"FGColor\"= {\n" +
+                "\t\t\"R\"= \"%s\",\n" +
+                "\t\t\"G\"= \"%s\",\n" +
+                "\t\t\"B\"= \"%s\"\n" +
+                "\t}\n" +
+                "}"
+
 
         val PackageFileList = arrayListOf(
             "package${File.separator}adb.exe",

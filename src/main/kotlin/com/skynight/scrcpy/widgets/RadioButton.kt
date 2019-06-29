@@ -1,6 +1,9 @@
 package com.skynight.scrcpy.widgets
 
+import com.skynight.scrcpy.base.ControlCenter
 import java.awt.Color
+import java.awt.image.BufferedImage
+import java.io.File
 import javax.swing.ImageIcon
 import javax.swing.JRadioButton
 
@@ -23,7 +26,8 @@ class RadioButton: JRadioButton {
     constructor(): super() {
         icon = ImageIcon("icons/RadioButton_UnSelected.png")
         selectedIcon = ImageIcon("icons/RadioButton_Selected.png")
-        background = Color.WHITE
+        background = ControlCenter.instance.getBGColor()
+        foreground = ControlCenter.instance.getFGColor()
         isFocusPainted = false
     }
 }

@@ -7,9 +7,7 @@ import com.skynight.scrcpy.base.BaseIndex.Companion.BitRateList
 import com.skynight.scrcpy.base.ControlCenter
 import com.skynight.scrcpy.base.GetConnectedDevices
 import com.skynight.scrcpy.base.LoadLanguage
-import com.skynight.scrcpy.widgets.CheckBox
-import com.skynight.scrcpy.widgets.Panel
-import com.skynight.scrcpy.widgets.RadioButton
+import com.skynight.scrcpy.widgets.*
 import java.awt.CardLayout
 import java.awt.Color
 import java.awt.Toolkit
@@ -17,17 +15,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.io.File
 import java.util.*
-import javax.swing.JFrame
-import javax.swing.JLabel
-import javax.swing.JTextField
-import javax.swing.JPanel
-import javax.swing.JMenu
-import javax.swing.JMenuBar
-import javax.swing.JMenuItem
-import javax.swing.ImageIcon
-import javax.swing.ButtonGroup
-import javax.swing.KeyStroke
-import javax.swing.BorderFactory
+import javax.swing.*
 import javax.swing.event.MenuEvent
 import javax.swing.event.MenuListener
 
@@ -42,7 +30,7 @@ class MainWindow : JFrame() {
     private lateinit var deviceInfoPanel: Panel
     private lateinit var cardLayout: CardLayout
     @Suppress("PrivatePropertyName")
-    private val DevicesMenu = mutableListOf<JMenuItem>()
+    private val DevicesMenu = mutableListOf<MenuItem>()
 
     companion object {
         private var created = false
@@ -77,7 +65,7 @@ class MainWindow : JFrame() {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
         title = jsonObject.get("title").asString
-        setSize(750, 350)
+        setSize(750, 304)
         isResizable = false
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
@@ -126,17 +114,15 @@ class MainWindow : JFrame() {
         about.setMnemonic('A')
         val properties = Properties()
         properties.load(MainWindow::class.java.classLoader.getResourceAsStream("version.properties"))
-        val version = JMenuItem(menuObject.get("version").asString + properties.getProperty("version"))
-        version.background = Color.WHITE
+        val version = MenuItem(menuObject.get("version").asString + properties.getProperty("version"))
         about.add(version)
 
         val deviceJMenu = JMenu(menuObject.get("devices").asString)
         deviceJMenu.mnemonic = KeyEvent.VK_D
         jMenuBar.add(deviceJMenu)
-        val refresh = JMenuItem(menuObject.get("refresh").asString)
+        val refresh = MenuItem(menuObject.get("refresh").asString)
         deviceJMenu.add(refresh)
         refresh.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.SHIFT_MASK)
-        refresh.background = Color.WHITE
         refresh.addActionListener {
             Thread {
                 GetConnectedDevices.reloadConnectedDevices()
@@ -177,12 +163,10 @@ class MainWindow : JFrame() {
         val connect = JMenu(menuObject.get("scrcpy").asString)
         jMenuBar.add(connect)
         connect.mnemonic = KeyEvent.VK_S
-        val connectDevice = JMenuItem(menuObject.get("single").asString)
+        val connectDevice = MenuItem(menuObject.get("single").asString)
         connectDevice.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.SHIFT_MASK)
-        connectDevice.background = Color.WHITE
-        val connectDevices = JMenuItem(menuObject.get("multi").asString)
+        val connectDevices = MenuItem(menuObject.get("multi").asString)
         connectDevices.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.SHIFT_MASK)
-        connectDevices.background = Color.WHITE
         connect.add(connectDevice)
         connect.add(connectDevices)
         connectDevice.addActionListener {
@@ -202,22 +186,48 @@ class MainWindow : JFrame() {
                 }
             }.start()
         }
+
+        val chooseColor = JMenu("自定义颜色")
+        jMenuBar.add(chooseColor)
+        val bgColor = MenuItem("背景颜色")
+        chooseColor.add(bgColor)
+        bgColor.addActionListener {
+            ControlCenter.instance.setBGColor(
+                JColorChooser.showDialog(
+                    this,
+                    "背景颜色",
+                    ControlCenter.instance.getBGColor()
+                )
+            )
+        }
+        val fgColor = MenuItem("文字颜色")
+        chooseColor.add(fgColor)
+        fgColor.addActionListener {
+            ControlCenter.instance.setFGColor(
+                JColorChooser.showDialog(
+                    this,
+                    "文字颜色",
+                    ControlCenter.instance.getFGColor()
+                )
+            )
+        }
+
     }
 
     private fun onConnect(): MutableList<String> {
 
         val command = if (ControlCenter.instance.getConsoleless()) {
-                mutableListOf(System.getProperty("user.dir") + File.separator + PackageFileList[7])
-            } else {
-                mutableListOf(
-                    "cmd.exe",
-                    "/c",
-                    "start",
-                    "cmd.exe",
-                    "/c",
-                    System.getProperty("user.dir") + File.separator + PackageFileList[6])
-            }
-
+            mutableListOf(System.getProperty("user.dir") + File.separator + PackageFileList[7])
+        } else {
+            mutableListOf(
+                "cmd.exe",
+                "/c",
+                "start",
+                "cmd.exe",
+                "/c",
+                System.getProperty("user.dir") + File.separator + PackageFileList[6]
+            )
+        }
 
         for (i in CheckBoxes) {
             command.add(i.getArg())
@@ -242,13 +252,12 @@ class MainWindow : JFrame() {
         val getConnectedDevices = GetConnectedDevices.getInstance()
         for (i in getConnectedDevices.getDeviceList()) {
             LogOutputWindow.takeLog("AddDevicesToMenu: $i")
-            val jMenuItem = JMenuItem(getConnectedDevices.getDeviceModel(i))
-            jMenuItem.background = Color.WHITE
-            jMenuItem.addActionListener {
+            val menuItem = MenuItem(getConnectedDevices.getDeviceModel(i))
+            menuItem.addActionListener {
                 cardLayout.show(deviceInfoPanel, i)
             }
-            DevicesMenu.add(jMenuItem)
-            deviceJMenu.add(jMenuItem)
+            DevicesMenu.add(menuItem)
+            deviceJMenu.add(menuItem)
         }
     }
 
@@ -257,7 +266,8 @@ class MainWindow : JFrame() {
         val panel = Panel(width * 2 / 3, 0, width / 3 - 16, 120)
         mainPanel.add(panel)
         panel.border = BorderFactory.createTitledBorder(saveLoad.get("title").asString)
-        val logOutputWindow = CheckBox(saveLoad.get("LogOutputWindow").asString, ControlCenter.instance.getLogOutputWindow())
+        val logOutputWindow =
+            CheckBox(saveLoad.get("LogOutputWindow").asString, ControlCenter.instance.getLogOutputWindow())
         panel.add(logOutputWindow)
         logOutputWindow.addItemListener {
             ControlCenter.instance.setLogOutputWindow(logOutputWindow.isSelected)
@@ -289,7 +299,7 @@ class MainWindow : JFrame() {
             panelList.clear()
         }
         cardLayout = CardLayout()
-        deviceInfoPanel = Panel(0, 0, width / 3, height - 64, cardLayout)
+        deviceInfoPanel = Panel(0, 0, width / 3, 240, cardLayout)
         mainPanel.add(deviceInfoPanel)
         deviceInfoPanel.border = BorderFactory.createTitledBorder(deviceInfo.get("title").asString)
 
@@ -298,23 +308,23 @@ class MainWindow : JFrame() {
 
             val subPanel = Panel(0, 0, width / 3 - 16, 100, null)
             val b = Panel(0, 0, width / 3, 25)
-            b.add(JLabel(deviceInfo.get("brand").asString))
-            b.add(JLabel(getConnectedDevices.getDeviceBrand(i)))
+            b.add(Label(deviceInfo.get("brand").asString))
+            b.add(Label(getConnectedDevices.getDeviceBrand(i)))
             subPanel.add(b)
 
             val m = Panel(0, 25, width / 3 - 16, 25)
-            m.add(JLabel(deviceInfo.get("model").asString))
-            m.add(JLabel(getConnectedDevices.getDeviceModel(i)))
+            m.add(Label(deviceInfo.get("model").asString))
+            m.add(Label(getConnectedDevices.getDeviceModel(i)))
             subPanel.add(m)
 
             val a = Panel(0, 50, width / 3 - 16, 25)
-            a.add(JLabel("Android "))
-            a.add(JLabel(getConnectedDevices.getDeviceAndroidVersion(i)))
+            a.add(Label("Android "))
+            a.add(Label(getConnectedDevices.getDeviceAndroidVersion(i)))
             subPanel.add(a)
 
             val s = Panel(0, 75, width / 3 - 16, 25)
-            s.add(JLabel("SDK: "))
-            s.add(JLabel(getConnectedDevices.getDeviceSDK(i)))
+            s.add(Label("SDK: "))
+            s.add(Label(getConnectedDevices.getDeviceSDK(i)))
             subPanel.add(s)
 
             val imei = StringBuilder(getConnectedDevices.getDeviceImei(i))
@@ -325,51 +335,51 @@ class MainWindow : JFrame() {
             }
 
             val im = Panel(0, 100, width / 3 - 16, 25)
-            im.add(JLabel("IMEI: "))
-            im.add(JLabel(imei.toString()))
+            im.add(Label("IMEI: "))
+            im.add(Label(imei.toString()))
             subPanel.add(im)
 
             val id = Panel(0, 125, width / 3 - 16, 25)
-            id.add(JLabel(deviceInfo.get("adb_id").asString))
+            id.add(Label(deviceInfo.get("adb_id").asString))
             val adbId = JTextField(i)
             adbId.isEditable = false
             id.add(adbId)
             subPanel.add(id)
 
             val status = Panel(0, 150, width / 3 - 16, 25)
-            status.add(JLabel(deviceInfo.get("status").asString))
-            val jLabel = JLabel()
-            jLabel.background = Color.BLACK
+            status.add(Label(deviceInfo.get("status").asString))
+            val label = Label()
+            label.background = Color.BLACK
             val st = deviceInfo.get("statuses").asJsonArray
-            jLabel.text = when (getConnectedDevices.getDeviceState(i)) {
+            label.text = when (getConnectedDevices.getDeviceState(i)) {
                 "device" -> {
-                    jLabel.foreground = Color.GREEN
+                    label.foreground = Color.GREEN
                     //"在线"
                     st[0].asString
                 }
                 "offline" -> {
-                    jLabel.foreground = Color.ORANGE
+                    label.foreground = Color.ORANGE
                     //"离线"
                     st[1].asString
                 }
                 "unauthorize" -> {
-                    jLabel.foreground = Color.BLUE
+                    label.foreground = Color.BLUE
                     //"未验证"
                     st[2].asString
                 }
                 else -> {
-                    jLabel.foreground = Color.RED
+                    label.foreground = Color.RED
                     //"已断开"
                     st[3].asString
                 }
             }
-            status.add(jLabel)
+            status.add(label)
             subPanel.add(status)
 
             val type = Panel(0, 175, width / 3 - 16, 25)
-            type.add(JLabel(deviceInfo.get("type").asString))
+            type.add(Label(deviceInfo.get("type").asString))
             type.add(
-                JLabel(
+                Label(
                     (if (!i.startsWith("192.168"))
                         deviceInfo.get("wired")
                     else deviceInfo.get(
@@ -391,10 +401,8 @@ class MainWindow : JFrame() {
         jPanel.border = BorderFactory.createTitledBorder(BitRate.get("title").asString)
         mainPanel.add(jPanel)
 
-        val bitRatePanel1 = JPanel()
+        val bitRatePanel1 = Panel(10, 20, 230, WidgetWithTextHeight)
         bitRatePanel1.isVisible = false
-        bitRatePanel1.background = Color.WHITE
-        bitRatePanel1.setBounds(10, 20, 230, WidgetWithTextHeight)
         jPanel.add(bitRatePanel1)
 
         val buttonGroup = ButtonGroup()
@@ -403,51 +411,42 @@ class MainWindow : JFrame() {
         buttonGroup.add(bitRate1)
         bitRate1.isSelected = true
         bitRatePanel1.add(bitRate1)
-        bitRate1.background = Color.WHITE
         bitRate1.addActionListener {
             bitRate = 0
         }
         val bitRate2 = RadioButton("30M")
         buttonGroup.add(bitRate2)
         bitRatePanel1.add(bitRate2)
-        bitRate2.background = Color.WHITE
         bitRate2.addActionListener {
             bitRate = 1
         }
         bitRatePanel1.isVisible = true
 
-        val bitRatePanel2 = JPanel()
-        bitRatePanel2.background = Color.WHITE
+        val bitRatePanel2 = Panel(10, 46, 230, WidgetWithTextHeight)
         bitRatePanel2.isVisible = false
-        bitRatePanel2.setBounds(10, 46, 230, WidgetWithTextHeight)
         jPanel.add(bitRatePanel2)
 
         val bitRate3 = RadioButton("20M")
         buttonGroup.add(bitRate3)
         bitRatePanel2.add(bitRate3)
-        bitRate3.background = Color.WHITE
         bitRate3.addActionListener {
             bitRate = 2
         }
         val bitRate4 = RadioButton("4M")
         buttonGroup.add(bitRate4)
         bitRatePanel2.add(bitRate4)
-        bitRate4.background = Color.WHITE
         bitRate4.addActionListener {
             bitRate = 3
         }
         bitRatePanel2.isVisible = true
 
-        val bitRatePanel3 = JPanel()
+        val bitRatePanel3 = Panel(10, 72, 230, WidgetWithTextHeight)
         jPanel.add(bitRatePanel3)
-        bitRatePanel3.background = Color.WHITE
         bitRatePanel3.isVisible = false
-        bitRatePanel3.setBounds(10, 72, 230, WidgetWithTextHeight)
 
         val bitRate5 = RadioButton(BitRate.get("custom").asString)
         buttonGroup.add(bitRate5)
         bitRatePanel3.add(bitRate5)
-        bitRate5.background = Color.WHITE
         bitRate5.addActionListener {
             bitRate = 4
         }
@@ -461,10 +460,8 @@ class MainWindow : JFrame() {
         panel.border = BorderFactory.createTitledBorder(tools.get("title").asString)
         mainPanel.add(panel)
 
-        val jPanel1 = JPanel()
+        val jPanel1 = Panel(10, 20, 230, WidgetWithTextHeight)
         panel.add(jPanel1)
-        jPanel1.background = Color.WHITE
-        jPanel1.setBounds(10, 20, 230, WidgetWithTextHeight)
 
         CheckBoxes.add(CheckBox(tools.get("fullscreen").asString, false, 0))
         jPanel1.add(CheckBoxes[CheckBoxes.lastIndex])
@@ -474,10 +471,8 @@ class MainWindow : JFrame() {
 
         jPanel1.isVisible = true
 
-        val jPanel2 = JPanel()
+        val jPanel2 = Panel(10, 46, 230, WidgetWithTextHeight)
         panel.add(jPanel2)
-        jPanel2.background = Color.WHITE
-        jPanel2.setBounds(10, 46, 230, WidgetWithTextHeight)
 
         CheckBoxes.add(CheckBox(tools.get("control").asString, true, 1))
         jPanel2.add(CheckBoxes[CheckBoxes.lastIndex])
@@ -487,10 +482,8 @@ class MainWindow : JFrame() {
 
         jPanel2.isVisible = true
 
-        val jPanel3 = JPanel()
+        val jPanel3 = Panel(10, 72, 230, WidgetWithTextHeight)
         panel.add(jPanel3)
-        jPanel3.background = Color.WHITE
-        jPanel3.setBounds(10, 72, 230, WidgetWithTextHeight)
 
         CheckBoxes.add(CheckBox(tools.get("keep_front").asString, false, 2))
         jPanel3.add(CheckBoxes[CheckBoxes.lastIndex])

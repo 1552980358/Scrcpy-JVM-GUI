@@ -5,6 +5,7 @@ import java.awt.Color
 import java.awt.event.WindowEvent
 import java.awt.event.WindowListener
 import javax.swing.JFrame
+import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTextArea
 import javax.swing.event.DocumentEvent
@@ -19,6 +20,14 @@ class LogOutputWindow: JFrame("Logging") {
         }
         private val jTextArea = JTextArea()
 
+        fun takeLog(log: Any): LogOutputWindow {
+            return try {
+                Companion.takeLog(log.toString())
+            } catch (e: Exception) {
+                LogOutputWindow.takeLog(e)
+                instance
+            }
+        }
         fun takeLog(log: Exception): LogOutputWindow {
             return takeLog(log.toString())
         }
@@ -61,7 +70,9 @@ class LogOutputWindow: JFrame("Logging") {
 
         })
 
-        val mainPanel = Panel(0, 0, null)
+        val mainPanel = JPanel()
+        mainPanel.setSize(0, 0)
+        mainPanel.layout = null
         add(mainPanel)
         mainPanel.isVisible = true
         val jScrollPane = JScrollPane(jTextArea)
@@ -87,7 +98,9 @@ class LogOutputWindow: JFrame("Logging") {
             }
         })
     }
-
+    fun takeLog(log: Any): LogOutputWindow {
+        return Companion.takeLog(log)
+    }
     fun takeLog(log: Exception): LogOutputWindow? {
         return Companion.takeLog(log)
     }

@@ -1,8 +1,10 @@
 package com.skynight.scrcpy.widgets
 
+import com.skynight.scrcpy.base.ControlCenter
 import java.awt.Color
 import java.awt.LayoutManager
 import javax.swing.JPanel
+import javax.swing.border.Border
 
 class Panel: JPanel {
     companion object {
@@ -24,6 +26,6 @@ class Panel: JPanel {
         setLayout(layout)
     }
     constructor(): super() {
-        background = Color.WHITE
+        background = ControlCenter.instance.getBGColor()
     }
 }

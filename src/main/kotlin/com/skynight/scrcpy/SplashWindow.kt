@@ -5,6 +5,8 @@ import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
 import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFilesMD5
 import com.skynight.scrcpy.base.LoadLanguage
 import com.skynight.scrcpy.base.exitButton
+import com.skynight.scrcpy.widgets.Label
+import com.skynight.scrcpy.widgets.Panel
 import org.apache.commons.codec.digest.DigestUtils
 import java.awt.Color
 import java.awt.Toolkit
@@ -45,14 +47,11 @@ class SplashWindow : JFrame() {
 
         })
 
-        val panel = JPanel()
+        val panel = Panel(width, height - 20, null)
         add(panel)
-        panel.background = Color.WHITE
-        panel.layout = null
         panel.isVisible = false
-        panel.setSize(300, 100)
 
-        val content = JLabel(jsonObject.get("check_file").asString, JLabel.CENTER)
+        val content = Label(jsonObject.get("check_file").asString, JLabel.CENTER)
         content.setBounds(0, 0, width - 16, 15)
         panel.add(content)
         panel.isVisible = true

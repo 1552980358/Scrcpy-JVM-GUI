@@ -1,13 +1,13 @@
 package com.skynight.scrcpy
 
 import com.skynight.scrcpy.base.*
-import java.awt.Color
+import com.skynight.scrcpy.widgets.Label
+import com.skynight.scrcpy.widgets.Panel
 import java.awt.Toolkit
 import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener
 import javax.swing.JFrame
 import javax.swing.JLabel
-import javax.swing.JPanel
 import javax.swing.JProgressBar
 
 class TestConnectionWindow : JFrame() {
@@ -35,19 +35,14 @@ class TestConnectionWindow : JFrame() {
 
             override fun componentShown(e: ComponentEvent?) {
             }
-
         })
 
-        val panel = JPanel()
+        val panel = Panel(width, height, null)
         add(panel)
-        panel.background = Color.WHITE
-        panel.layout = null
         panel.isVisible = false
-        panel.setSize(width, height)
 
-        val content = JLabel(jsonObject.get("connection_check").asString, JLabel.CENTER)
+        val content = Label(jsonObject.get("connection_check").asString, JLabel.CENTER, 0, 0, width - 16, 15)
         LogOutputWindow.takeLog("Connection Check Start")
-        content.setBounds(0, 0, width - 16, 15)
         panel.add(content)
         panel.isVisible = true
 
@@ -62,7 +57,7 @@ class TestConnectionWindow : JFrame() {
 
             val jProgressBar = JProgressBar()
             panel.add(jProgressBar)
-            jProgressBar.isVisible = false
+            jProgressBar.foreground = ControlCenter.instance.getBGColor()
             jProgressBar.setBounds(10, 15, 260, 40)
             jProgressBar.maximum = 3
             jProgressBar.value = 0
