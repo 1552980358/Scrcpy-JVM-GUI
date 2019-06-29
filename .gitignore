@@ -1,2 +1,3 @@
-\save\locale
-\save\ConsoleSetting
+\save\
+\src\main\kotlin\com\skynight\scrcpy\TestClass.kt
+\src\main\java\com\skynight\scrcpy\TestClass.kt

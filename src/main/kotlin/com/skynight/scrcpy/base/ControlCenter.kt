@@ -149,23 +149,27 @@ class ControlCenter {
     fun getBGColor(): Color {
         return BGColor
     }
-    fun setBGColor(color: Color) {
-        if (color.rgb == BGColor.rgb) {
-            return
+    fun setBGColor(color: Color?) {
+        color?.let {
+            if (color.rgb == BGColor.rgb) {
+                return
+            }
+            this.BGColor = color
+            changeColorSettings()
         }
-        this.BGColor = color
-        changeColorSettings()
     }
 
     fun getFGColor(): Color {
         return FGColor
     }
-    fun setFGColor(color: Color) {
-        if (color.rgb == FGColor.rgb) {
-            return
+    fun setFGColor(color: Color?) {
+        color?.let {
+            if (color.rgb == FGColor.rgb) {
+                return
+            }
+            this.FGColor = color
+            changeColorSettings()
         }
-        this.FGColor = color
-        changeColorSettings()
     }
 
     private fun changeConsoleSettings() {
