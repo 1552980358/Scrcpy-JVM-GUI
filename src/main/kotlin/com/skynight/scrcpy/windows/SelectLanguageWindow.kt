@@ -1,4 +1,4 @@
-package com.skynight.scrcpy
+package com.skynight.scrcpy.windows
 
 import com.skynight.scrcpy.base.BaseIndex.Companion.DataSave
 import com.skynight.scrcpy.base.BaseIndex.Companion.DefaultLocale

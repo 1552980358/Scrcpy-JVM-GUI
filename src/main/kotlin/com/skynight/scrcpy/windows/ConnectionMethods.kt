@@ -1,10 +1,9 @@
-package com.skynight.scrcpy
+package com.skynight.scrcpy.windows
 
 import com.google.gson.JsonObject
 import com.skynight.scrcpy.base.*
 import com.skynight.scrcpy.widgets.Button
 import com.skynight.scrcpy.widgets.Panel
-import java.awt.Color
 import java.awt.Toolkit
 import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener

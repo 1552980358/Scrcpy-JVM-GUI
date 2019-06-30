@@ -1,6 +1,6 @@
 package com.skynight.scrcpy.base
 
-import com.skynight.scrcpy.LogOutputWindow
+import com.skynight.scrcpy.windows.LogOutputWindow
 
 
 class GetConnectedDevices private constructor() {

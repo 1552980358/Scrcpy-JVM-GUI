@@ -1,8 +1,9 @@
-package com.skynight.scrcpy
+package com.skynight.scrcpy.windows
 
 import com.skynight.scrcpy.base.BaseIndex.Companion.PanelMarginRight
 import com.skynight.scrcpy.base.BaseIndex.Companion.WidgetWithTextHeight
 import com.skynight.scrcpy.base.GetConnectedDevices
+import com.skynight.scrcpy.base.LoadLanguage
 import com.skynight.scrcpy.widgets.Button
 import com.skynight.scrcpy.widgets.CheckBox
 import com.skynight.scrcpy.widgets.Panel
@@ -23,7 +24,9 @@ class SelectDeviceWindow(commands: MutableList<String>, single: Boolean = true):
         val getConnectedDevices = GetConnectedDevices.getInstance()
         val list = getConnectedDevices.getDeviceList()
         val screenSize = Toolkit.getDefaultToolkit().screenSize
+        val jsonObject = LoadLanguage.instance.getWindowStrings("SelectDeviceWindow")
 
+        title = jsonObject.get("title").asString
         setSize(350,  list.size * WidgetWithTextHeight + 75)
         isResizable = false
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
@@ -36,14 +39,12 @@ class SelectDeviceWindow(commands: MutableList<String>, single: Boolean = true):
             }
 
             override fun componentResized(e: ComponentEvent?) {
-
             }
 
             override fun componentHidden(e: ComponentEvent?) {
             }
 
             override fun componentShown(e: ComponentEvent?) {
-
             }
 
         })
@@ -74,7 +75,7 @@ class SelectDeviceWindow(commands: MutableList<String>, single: Boolean = true):
             }
         }
 
-        val button = Button("连接", 10, height, width - 20 - PanelMarginRight, 30)
+        val button = Button(jsonObject.get("connect").asString, 10, height, width - 20 - PanelMarginRight, 30)
         mainPanel.add(button)
         button.addActionListener {
             Thread {

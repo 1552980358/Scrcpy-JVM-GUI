@@ -18,7 +18,10 @@
             "newConnection": "連接新設備",
 			"scrcpy": "開始投屏",
 			"single": "單設備投屏",
-			"multi": "多設備同時投屏"
+			"multi": "多設備同時投屏",
+            "selectColor": "顔色主題",
+            "bgcolor": "背景色",
+            "fgcolor": "字體色"
 		},
 		"DeviceInfo": {
 			"title": "~ 設備信息 ~",
@@ -101,6 +104,11 @@
 		"wireless": "無綫局域網TCP/IP橋接",
 		"confirm": "確認"
 	},
+    
+    "SelectDeviceWindow": {
+        "title": "選擇設備",
+        "connect": "連接"
+    },
 
 	"TestConnectionWindow": {
 		"title": "啓動中, 請稍等...",

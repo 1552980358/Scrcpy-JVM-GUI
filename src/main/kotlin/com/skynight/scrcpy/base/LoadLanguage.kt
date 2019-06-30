@@ -2,7 +2,7 @@ package com.skynight.scrcpy.base
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.skynight.scrcpy.LogOutputWindow
+import com.skynight.scrcpy.windows.LogOutputWindow
 import com.skynight.scrcpy.base.BaseIndex.Companion.LanguageDir
 import java.io.File
 import java.util.*

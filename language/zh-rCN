@@ -18,7 +18,10 @@
             "newConnection": "连接新设备",
 			"scrcpy": "开始投屏",
 			"single": "单设备投屏",
-			"multi": "多设备同时投屏"
+			"multi": "多设备同时投屏",
+            "selectColor": "颜色主题",
+            "bgcolor": "背景色",
+            "fgcolor": "字体色"
 		},
 		"DeviceInfo": {
 			"title": "~ 设备信息 ~",
@@ -107,6 +110,11 @@
 		"wireless": "无线连接",
 		"confirm": "确定"
 	},
+    
+    "SelectDeviceWindow": {
+        "title": "选择设备",
+        "connect": "连接"
+    },
 
 	"TestConnectionWindow": {
 		"title": "启动中, 请稍后...",

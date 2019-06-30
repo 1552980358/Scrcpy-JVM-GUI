@@ -2,7 +2,7 @@ package com.skynight.scrcpy.base
 
 import com.google.gson.JsonParser
 import com.skynight.scrcpy.ControlListener
-import com.skynight.scrcpy.LogOutputWindow
+import com.skynight.scrcpy.windows.LogOutputWindow
 import com.skynight.scrcpy.base.BaseIndex.Companion.DataSave
 import com.skynight.scrcpy.base.BaseIndex.Companion.SaveColor
 import com.skynight.scrcpy.base.BaseIndex.Companion.SaveConsoleSetting

@@ -1,6 +1,5 @@
-package com.skynight.scrcpy
+package com.skynight.scrcpy.windows
 
-import com.skynight.scrcpy.widgets.Panel
 import java.awt.Color
 import java.awt.event.WindowEvent
 import java.awt.event.WindowListener
@@ -22,9 +21,9 @@ class LogOutputWindow: JFrame("Logging") {
 
         fun takeLog(log: Any): LogOutputWindow {
             return try {
-                Companion.takeLog(log.toString())
+                takeLog(log.toString())
             } catch (e: Exception) {
-                LogOutputWindow.takeLog(e)
+                takeLog(e)
                 instance
             }
         }

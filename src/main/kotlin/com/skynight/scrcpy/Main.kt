@@ -1,6 +1,7 @@
 package com.skynight.scrcpy
 
 import com.skynight.scrcpy.base.ControlCenter
+import com.skynight.scrcpy.windows.*
 
 fun main(@Suppress("UnusedMainParameter") args: Array<String>) {
     //SelectLanguageWindow()

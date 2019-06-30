@@ -1,4 +1,4 @@
-package com.skynight.scrcpy
+package com.skynight.scrcpy.windows
 
 import com.skynight.scrcpy.base.*
 import com.skynight.scrcpy.widgets.Label
@@ -55,28 +55,29 @@ class TestConnectionWindow : JFrame() {
                 return@Thread
             }
 
-            val jProgressBar = JProgressBar()
+            val jProgressBar = JProgressBar().also {
+                it.foreground = ControlCenter.instance.getBGColor()
+                it.setBounds(10, 15, 260, 40)
+                it.maximum = 3
+                it.value = 0
+                it.isVisible = true
+            }
             panel.add(jProgressBar)
-            jProgressBar.foreground = ControlCenter.instance.getBGColor()
-            jProgressBar.setBounds(10, 15, 260, 40)
-            jProgressBar.maximum = 3
-            jProgressBar.value = 0
-            jProgressBar.isVisible = true
 
             title = jsonObject.get("connection_check_succeed").asString
             LogOutputWindow.takeLog("Connection Check Pass")
 
             ControlCenter.instance.getControlListener().passAdbCheck()
 
-            for (i: Int in 1..3) {
-                content.text = String.format(jsonObject.get("time_remain").asString, 4 - i)
+            for (i: Int in 3 downTo  0) {
+                content.text = String.format(jsonObject.get("time_remain").asString, i)
+                LogOutputWindow.takeLog("${i}seconds left")
+                jProgressBar.value = 3 - i
                 try {
                     Thread.sleep(1000)
                 } catch (e: Exception) {
                     //
                 }
-                LogOutputWindow.takeLog("${4-i}seconds left")
-                jProgressBar.value = i
             }
             dispose()
         }.start()

@@ -1,4 +1,4 @@
-package com.skynight.scrcpy
+package com.skynight.scrcpy.windows
 
 import com.google.gson.JsonObject
 import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
@@ -112,32 +112,35 @@ class MainWindow : JFrame() {
         val about = JMenu(menuObject.get("about").asString)
         jMenuBar.add(about)
         about.setMnemonic('A')
-        val properties = Properties()
-        properties.load(MainWindow::class.java.classLoader.getResourceAsStream("version.properties"))
+        val properties = Properties().also {
+            it.load(MainWindow::class.java.classLoader.getResourceAsStream("version.properties"))
+        }
         val version = MenuItem(menuObject.get("version").asString + properties.getProperty("version"))
         about.add(version)
 
         val deviceJMenu = JMenu(menuObject.get("devices").asString)
         deviceJMenu.mnemonic = KeyEvent.VK_D
         jMenuBar.add(deviceJMenu)
-        val refresh = MenuItem(menuObject.get("refresh").asString)
-        deviceJMenu.add(refresh)
-        refresh.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.SHIFT_MASK)
-        refresh.addActionListener {
-            Thread {
-                GetConnectedDevices.reloadConnectedDevices()
-                mainPanel.remove(deviceInfoPanel)
-
-                Thread { getDeviceInfo() }.start()
-
+        val refresh = MenuItem(menuObject.get("refresh").asString).also {
+            it.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.SHIFT_MASK)
+            it.addActionListener {
                 Thread {
-                    for (i in DevicesMenu) {
-                        deviceJMenu.remove(i)
-                    }
-                    addDevicesToMenu(deviceJMenu)
+                    GetConnectedDevices.reloadConnectedDevices()
+                    mainPanel.remove(deviceInfoPanel)
+
+                    Thread { getDeviceInfo() }.start()
+
+                    Thread {
+                        for (i in DevicesMenu) {
+                            deviceJMenu.remove(i)
+                        }
+                        addDevicesToMenu(deviceJMenu)
+                    }.start()
                 }.start()
-            }.start()
+            }
         }
+        deviceJMenu.add(refresh)
+
         try {
             addDevicesToMenu(deviceJMenu)
         } catch (e: Exception) {
@@ -187,26 +190,26 @@ class MainWindow : JFrame() {
             }.start()
         }
 
-        val chooseColor = JMenu("自定义颜色")
+        val chooseColor = JMenu(menuObject.get("selectColor").asString)
         jMenuBar.add(chooseColor)
-        val bgColor = MenuItem("背景颜色")
+        val bgColor = MenuItem(menuObject.get("bgcolor").asString)
         chooseColor.add(bgColor)
         bgColor.addActionListener {
             ControlCenter.instance.setBGColor(
                 JColorChooser.showDialog(
                     this,
-                    "背景颜色",
+                    menuObject.get("bgcolor").asString,
                     ControlCenter.instance.getBGColor()
                 )
             )
         }
-        val fgColor = MenuItem("文字颜色")
+        val fgColor = MenuItem(menuObject.get("fgcolor").asString)
         chooseColor.add(fgColor)
         fgColor.addActionListener {
             ControlCenter.instance.setFGColor(
                 JColorChooser.showDialog(
                     this,
-                    "文字颜色",
+                    menuObject.get("fgcolor").asString,
                     ControlCenter.instance.getFGColor()
                 )
             )
@@ -272,7 +275,8 @@ class MainWindow : JFrame() {
         logOutputWindow.addItemListener {
             ControlCenter.instance.setLogOutputWindow(logOutputWindow.isSelected)
         }
-        LogOutputWindow.instance.listener = object : LogWindowOperationListener {
+        LogOutputWindow.instance.listener = object :
+            LogWindowOperationListener {
             override fun onStateChange(isVisible: Boolean) {
                 super.onStateChange(isVisible)
                 logOutputWindow.isSelected = isVisible

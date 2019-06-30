@@ -1,4 +1,4 @@
-package com.skynight.scrcpy
+package com.skynight.scrcpy.windows
 
 import com.skynight.scrcpy.base.ControlCenter
 import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
@@ -6,17 +6,16 @@ import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFilesMD5
 import com.skynight.scrcpy.base.LoadLanguage
 import com.skynight.scrcpy.base.exitButton
 import com.skynight.scrcpy.widgets.Label
+import com.skynight.scrcpy.widgets.Label.Companion.LABEL_CENTER
 import com.skynight.scrcpy.widgets.Panel
 import org.apache.commons.codec.digest.DigestUtils
-import java.awt.Color
 import java.awt.Toolkit
 import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener
 import java.io.File
 import java.io.FileInputStream
-import javax.swing.JPanel
-import javax.swing.*
-import kotlin.math.log
+import javax.swing.JFrame
+
 
 class SplashWindow : JFrame() {
 
@@ -51,8 +50,7 @@ class SplashWindow : JFrame() {
         add(panel)
         panel.isVisible = false
 
-        val content = Label(jsonObject.get("check_file").asString, JLabel.CENTER)
-        content.setBounds(0, 0, width - 16, 15)
+        val content = Label(jsonObject.get("check_file").asString, LABEL_CENTER, 0, 0, width - 16, 15)
         panel.add(content)
         panel.isVisible = true
 

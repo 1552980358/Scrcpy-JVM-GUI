@@ -1,28 +1,25 @@
 package com.skynight.scrcpy.base
 
-import com.skynight.scrcpy.LogOutputWindow
+import com.skynight.scrcpy.windows.LogOutputWindow
 import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
-import java.awt.Color
+import com.skynight.scrcpy.widgets.Button
 import java.io.File
 import java.util.*
-import javax.swing.JButton
 import javax.swing.JFrame
 import javax.swing.JPanel
 import kotlin.collections.ArrayList
 
 fun exitButton(jFrame: JFrame, jPanel: JPanel) {
     jFrame.title = "出现错误!"
-    val jButton = JButton("确定")
-    jButton.isVisible = false
-    jButton.setBounds(10, 30, 260, 40)
-    jButton.background = Color.BLACK
-    jButton.foreground = Color.WHITE
+    val jButton = Button("确定", 10, 30, 260, 40).also {
+        it.isVisible = false
+        it.addActionListener {
+            ControlCenter.instance.getControlListener().passFileCheck()
+            jFrame.dispose()
+        }
+    }
     jPanel.add(jButton)
     jButton.isVisible = true
-    jButton.addActionListener {
-        ControlCenter.instance.getControlListener().passFileCheck()
-        jFrame.dispose()
-    }
 }
 
 fun runAdb(commands: String): Boolean {
