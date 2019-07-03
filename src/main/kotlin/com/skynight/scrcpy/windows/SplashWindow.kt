@@ -15,12 +15,13 @@ import java.awt.event.ComponentListener
 import java.io.File
 import java.io.FileInputStream
 import javax.swing.JFrame
+import javax.swing.UIManager
 
 
 class SplashWindow : JFrame() {
 
     init {
-        val jsonObject = LoadLanguage.instance.getWindowStrings("SplashWindow")
+        val jsonObject = LoadLanguage.getLoadLanguage.getWindowStrings("SplashWindow")
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
         setSize(300, 120)
@@ -73,7 +74,7 @@ class SplashWindow : JFrame() {
             }
 
             LogOutputWindow.takeLog("Splash Check Pass").newLine()
-            ControlCenter.instance.getControlListener().passFileCheck()
+            ControlCenter.getControlCenter.getControlListener().passFileCheck()
             dispose()
             return@Thread
         }.start()

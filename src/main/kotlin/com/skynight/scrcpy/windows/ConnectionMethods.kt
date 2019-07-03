@@ -14,11 +14,12 @@ class ADBWiredWindow : JFrame() {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
-        val jsonObject = LoadLanguage.instance.getWindowStrings("ADBWiredWindow")
+        val jsonObject = LoadLanguage.getLoadLanguage.getWindowStrings("ADBWiredWindow")
 
         title = jsonObject.get("title").asString
         setSize(350, 300)
         isAlwaysOnTop = true
+        isResizable = false
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         isVisible = true
@@ -47,14 +48,14 @@ class ADBWiredWindow : JFrame() {
         val jTextArea = JTextArea(jsonObject.get("step").asString)
         panel.add(jTextArea)
         jTextArea.isEditable = false
-        jTextArea.background = ControlCenter.instance.getBGColor()
-        jTextArea.foreground = ControlCenter.instance.getFGColor()
+        jTextArea.background = ControlCenter.getControlCenter.getBGColor()
+        jTextArea.foreground = ControlCenter.getControlCenter.getFGColor()
         jTextArea.setBounds(5, 0, 350, 184)
 
         val jButton = Button(jsonObject.get("step_done").asString, 10, 200, 310, 50)
         jButton.addActionListener {
             if (!MainWindow.isCreated()){
-                ControlCenter.instance.getControlListener().onConfirmConnection()
+                ControlCenter.getControlCenter.getControlListener().onConfirmConnection()
             }
             dispose()
         }
@@ -69,10 +70,11 @@ class ADBWirelessWindow : JFrame() {
 
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
-        jsonObject = LoadLanguage.instance.getWindowStrings("ADBWirelessWindow")
+        jsonObject = LoadLanguage.getLoadLanguage.getWindowStrings("ADBWirelessWindow")
 
         title = jsonObject.get("title").asString
         setSize(350, 300)
+        isResizable = false
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         isVisible = true
@@ -88,8 +90,8 @@ class ADBWirelessWindow : JFrame() {
         val jTextArea = JTextArea(ADBWirelessStepsBtn[0].toString())
         panel.add(jTextArea)
         jTextArea.isEditable = false
-        jTextArea.background = ControlCenter.instance.getBGColor()
-        jTextArea.foreground = ControlCenter.instance.getFGColor()
+        jTextArea.background = ControlCenter.getControlCenter.getBGColor()
+        jTextArea.foreground = ControlCenter.getControlCenter.getFGColor()
         jTextArea.setBounds(5, 0, 350, 150)
 
         // IP 抓取 adb shell ip route list table 0 | grep "local 192.168."
@@ -145,8 +147,8 @@ class ADBWirelessWindow : JFrame() {
                             jTextArea.append(jsonObject.get("fetch_fail").asString)
                             val jTextField = JTextField()
                             panel.add(jTextField)
-                            jTextField.background = ControlCenter.instance.getBGColor()
-                            jTextField.foreground = ControlCenter.instance.getFGColor()
+                            jTextField.background = ControlCenter.getControlCenter.getBGColor()
+                            jTextField.foreground = ControlCenter.getControlCenter.getFGColor()
                             jTextField.setBounds(5, 150, 250, 25)
 
                             val confirm = Button(jsonObject.get("confirm").asString, 255, 150, 70, 25)
@@ -169,7 +171,7 @@ class ADBWirelessWindow : JFrame() {
                 }
                 5 -> {
                     if (!MainWindow.isCreated()){
-                        ControlCenter.instance.getControlListener().onConfirmConnection()
+                        ControlCenter.getControlCenter.getControlListener().onConfirmConnection()
                     }
                     dispose()
                 }

@@ -4,8 +4,8 @@ import com.google.gson.JsonObject
 import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
 import com.skynight.scrcpy.base.BaseIndex.Companion.WidgetWithTextHeight
 import com.skynight.scrcpy.base.BaseIndex.Companion.BitRateList
+import com.skynight.scrcpy.base.ConnectedDevices
 import com.skynight.scrcpy.base.ControlCenter
-import com.skynight.scrcpy.base.GetConnectedDevices
 import com.skynight.scrcpy.base.LoadLanguage
 import com.skynight.scrcpy.widgets.*
 import java.awt.CardLayout
@@ -13,6 +13,8 @@ import java.awt.Color
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
+import java.awt.event.WindowEvent
+import java.awt.event.WindowListener
 import java.io.File
 import java.util.*
 import javax.swing.*
@@ -38,7 +40,7 @@ class MainWindow : JFrame() {
             return created
         }
 
-        val instance: MainWindow by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+        val instance by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             created = true
             MainWindow()
         }
@@ -53,24 +55,26 @@ class MainWindow : JFrame() {
     init {
         Thread {
             try {
-                Thread.sleep(3200)
+                Thread.sleep(3100)
             } catch (e: Exception) {
 
             }
             isVisible = true
         }.start()
 
-        jsonObject = LoadLanguage.instance.getWindowStrings("MainWindow")
+        jsonObject = LoadLanguage.getLoadLanguage.getWindowStrings("MainWindow")
 
         val screenSize = Toolkit.getDefaultToolkit().screenSize
 
         title = jsonObject.get("title").asString
         setSize(750, 304)
         isResizable = false
+        // Specify location, else left top
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
+        // Action click on exit
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         isVisible = false
-        iconImage = ImageIcon("icons/MainFrame.jpg").image
+        iconImage = ImageIcon("icons/icon.jpg").image
 
         mainPanel = Panel(width, height, null)
         add(mainPanel)
@@ -125,7 +129,7 @@ class MainWindow : JFrame() {
             it.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.SHIFT_MASK)
             it.addActionListener {
                 Thread {
-                    GetConnectedDevices.reloadConnectedDevices()
+                    ConnectedDevices.reloadConnectedDevices()
                     mainPanel.remove(deviceInfoPanel)
 
                     Thread { getDeviceInfo() }.start()
@@ -176,7 +180,7 @@ class MainWindow : JFrame() {
             //onConnect()
             Thread {
                 SelectDeviceWindow(onConnect())
-                if (ControlCenter.instance.getTips()) {
+                if (ControlCenter.getControlCenter.getTips()) {
                     ControlKeyWindow.instance.showFrame()
                 }
             }.start()
@@ -184,7 +188,7 @@ class MainWindow : JFrame() {
         connectDevices.addActionListener {
             Thread {
                 SelectDeviceWindow(onConnect(), false)
-                if (ControlCenter.instance.getTips()) {
+                if (ControlCenter.getControlCenter.getTips()) {
                     ControlKeyWindow.instance.showFrame()
                 }
             }.start()
@@ -195,22 +199,22 @@ class MainWindow : JFrame() {
         val bgColor = MenuItem(menuObject.get("bgcolor").asString)
         chooseColor.add(bgColor)
         bgColor.addActionListener {
-            ControlCenter.instance.setBGColor(
+            ControlCenter.getControlCenter.setBGColor(
                 JColorChooser.showDialog(
                     this,
                     menuObject.get("bgcolor").asString,
-                    ControlCenter.instance.getBGColor()
+                    ControlCenter.getControlCenter.getBGColor()
                 )
             )
         }
         val fgColor = MenuItem(menuObject.get("fgcolor").asString)
         chooseColor.add(fgColor)
         fgColor.addActionListener {
-            ControlCenter.instance.setFGColor(
+            ControlCenter.getControlCenter.setFGColor(
                 JColorChooser.showDialog(
                     this,
                     menuObject.get("fgcolor").asString,
-                    ControlCenter.instance.getFGColor()
+                    ControlCenter.getControlCenter.getFGColor()
                 )
             )
         }
@@ -219,7 +223,7 @@ class MainWindow : JFrame() {
 
     private fun onConnect(): MutableList<String> {
 
-        val command = if (ControlCenter.instance.getConsoleless()) {
+        val command = if (ControlCenter.getControlCenter.getConsoleless()) {
             mutableListOf(System.getProperty("user.dir") + File.separator + PackageFileList[7])
         } else {
             mutableListOf(
@@ -252,7 +256,7 @@ class MainWindow : JFrame() {
 
     private fun addDevicesToMenu(deviceJMenu: JMenu) {
         DevicesMenu.clear()
-        val getConnectedDevices = GetConnectedDevices.getInstance()
+        val getConnectedDevices = ConnectedDevices.getConnectedDevices()
         for (i in getConnectedDevices.getDeviceList()) {
             LogOutputWindow.takeLog("AddDevicesToMenu: $i")
             val menuItem = MenuItem(getConnectedDevices.getDeviceModel(i))
@@ -266,14 +270,15 @@ class MainWindow : JFrame() {
 
     private fun getSaveLoad() {
         val saveLoad = jsonObject.get("SaveLoad").asJsonObject
-        val panel = Panel(width * 2 / 3, 0, width / 3 - 16, 120)
+        val panel = Panel(width * 2 / 3, 0, width / 3 - 16, 120).also {
+            it.setUpWithTitledBorder(saveLoad.get("title").asString)
+        }
         mainPanel.add(panel)
-        panel.border = BorderFactory.createTitledBorder(saveLoad.get("title").asString)
         val logOutputWindow =
-            CheckBox(saveLoad.get("LogOutputWindow").asString, ControlCenter.instance.getLogOutputWindow())
+            CheckBox(saveLoad.get("LogOutputWindow").asString, ControlCenter.getControlCenter.getLogOutputWindow())
         panel.add(logOutputWindow)
         logOutputWindow.addItemListener {
-            ControlCenter.instance.setLogOutputWindow(logOutputWindow.isSelected)
+            ControlCenter.getControlCenter.setLogOutputWindow(logOutputWindow.isSelected)
         }
         LogOutputWindow.instance.listener = object :
             LogWindowOperationListener {
@@ -283,16 +288,16 @@ class MainWindow : JFrame() {
             }
         }
 
-        val consoleless = CheckBox(saveLoad.get("Consoleless").asString, ControlCenter.instance.getConsoleless())
+        val consoleless = CheckBox(saveLoad.get("Consoleless").asString, ControlCenter.getControlCenter.getConsoleless())
         panel.add(consoleless)
         consoleless.addActionListener {
-            ControlCenter.instance.setConsoleless(consoleless.isSelected)
+            ControlCenter.getControlCenter.setConsoleless(consoleless.isSelected)
         }
 
-        val tips = CheckBox(saveLoad.get("Tips").asString, ControlCenter.instance.getTips())
+        val tips = CheckBox(saveLoad.get("Tips").asString, ControlCenter.getControlCenter.getTips())
         panel.add(tips)
         tips.addActionListener {
-            ControlCenter.instance.setTips(tips.isSelected)
+            ControlCenter.getControlCenter.setTips(tips.isSelected)
         }
     }
 
@@ -303,14 +308,16 @@ class MainWindow : JFrame() {
             panelList.clear()
         }
         cardLayout = CardLayout()
-        deviceInfoPanel = Panel(0, 0, width / 3, 240, cardLayout)
+        deviceInfoPanel = Panel(0, 0, width / 3, 240, cardLayout).also {
+            it.setUpWithTitledBorder(deviceInfo.get("title").asString)
+        }
         mainPanel.add(deviceInfoPanel)
-        deviceInfoPanel.border = BorderFactory.createTitledBorder(deviceInfo.get("title").asString)
 
-        val getConnectedDevices = GetConnectedDevices.getInstance()
+        val getConnectedDevices = ConnectedDevices.getConnectedDevices()
         for (i in getConnectedDevices.getDeviceList()) {
 
             val subPanel = Panel(0, 0, width / 3 - 16, 100, null)
+
             val b = Panel(0, 0, width / 3, 25)
             b.add(Label(deviceInfo.get("brand").asString))
             b.add(Label(getConnectedDevices.getDeviceBrand(i)))
@@ -383,13 +390,7 @@ class MainWindow : JFrame() {
             val type = Panel(0, 175, width / 3 - 16, 25)
             type.add(Label(deviceInfo.get("type").asString))
             type.add(
-                Label(
-                    (if (!i.startsWith("192.168"))
-                        deviceInfo.get("wired")
-                    else deviceInfo.get(
-                        "wireless"
-                    )).asString
-                )
+                Label(deviceInfo.get(if (i.startsWith("192.168")) "wireless" else "wired").asString)
             )
             subPanel.add(type)
 
@@ -401,8 +402,9 @@ class MainWindow : JFrame() {
 
     private fun setBitRate() {
         @Suppress("LocalVariableName") val BitRate = jsonObject.get("BitRate").asJsonObject
-        val jPanel = Panel(width / 3, 0, width / 3, 120, null)
-        jPanel.border = BorderFactory.createTitledBorder(BitRate.get("title").asString)
+        val jPanel = Panel(width / 3, 0, width / 3, 120, null).also {
+            it.setUpWithTitledBorder(BitRate.get("title").asString)
+        }
         mainPanel.add(jPanel)
 
         val bitRatePanel1 = Panel(10, 20, 230, WidgetWithTextHeight)
@@ -460,8 +462,9 @@ class MainWindow : JFrame() {
 
     private fun setTools() {
         val tools = jsonObject.get("Tools").asJsonObject
-        val panel = Panel(width / 3, 120, width / 3, 120, null)
-        panel.border = BorderFactory.createTitledBorder(tools.get("title").asString)
+        val panel = Panel(width / 3, 120, width / 3, 120, null).also {
+            it.setUpWithTitledBorder(tools.get("title").asString)
+        }
         mainPanel.add(panel)
 
         val jPanel1 = Panel(10, 20, 230, WidgetWithTextHeight)

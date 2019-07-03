@@ -3,23 +3,23 @@ package com.skynight.scrcpy.base
 import com.skynight.scrcpy.windows.LogOutputWindow
 
 
-class GetConnectedDevices private constructor() {
+class ConnectedDevices private constructor() {
     companion object {
         @Volatile
-        private var instance: GetConnectedDevices? = null
+        private var connectedDevices: ConnectedDevices? = null
 
         @Synchronized
-        fun getInstance(): GetConnectedDevices {
-            if (instance == null) {
-                instance = GetConnectedDevices()
+        fun getConnectedDevices(): ConnectedDevices {
+            if (connectedDevices == null) {
+                connectedDevices = ConnectedDevices()
             }
-            return instance as GetConnectedDevices
+            return connectedDevices as ConnectedDevices
         }
 
         // 重新加载
-        fun reloadConnectedDevices(): GetConnectedDevices {
-            instance = GetConnectedDevices()
-            return instance as GetConnectedDevices
+        fun reloadConnectedDevices(): ConnectedDevices {
+            connectedDevices = ConnectedDevices()
+            return connectedDevices as ConnectedDevices
         }
     }
 

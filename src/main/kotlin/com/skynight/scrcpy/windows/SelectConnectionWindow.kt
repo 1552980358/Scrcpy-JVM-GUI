@@ -13,7 +13,7 @@ import javax.swing.*
 class SelectConnectionWindow: JFrame() {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
-        val loadLanguage = LoadLanguage.instance.getWindowStrings("SelectConnectionWindow")
+        val loadLanguage = LoadLanguage.getLoadLanguage.getWindowStrings("SelectConnectionWindow")
 
         title = loadLanguage.get("title").asString
         setSize(300, 160)
@@ -58,7 +58,7 @@ class SelectConnectionWindow: JFrame() {
         val jButton = Button(loadLanguage.get("confirm").asString, 10,70, 264, 40)
         jPanel.add(jButton)
         jButton.addActionListener {
-            val controlCenter = ControlCenter.instance
+            val controlCenter = ControlCenter.getControlCenter
             controlCenter.isWiredMethod = wired.isSelected
             controlCenter.getControlListener().onHandleConnectionMethod()
             dispose()

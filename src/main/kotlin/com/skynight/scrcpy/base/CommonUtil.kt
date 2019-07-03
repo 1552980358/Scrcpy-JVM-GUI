@@ -2,7 +2,9 @@ package com.skynight.scrcpy.base
 
 import com.skynight.scrcpy.windows.LogOutputWindow
 import com.skynight.scrcpy.base.BaseIndex.Companion.PackageFileList
+import com.skynight.scrcpy.services.TrayService
 import com.skynight.scrcpy.widgets.Button
+import java.awt.TrayIcon
 import java.io.File
 import java.util.*
 import javax.swing.JFrame
@@ -14,7 +16,7 @@ fun exitButton(jFrame: JFrame, jPanel: JPanel) {
     val jButton = Button("确定", 10, 30, 260, 40).also {
         it.isVisible = false
         it.addActionListener {
-            ControlCenter.instance.getControlListener().passFileCheck()
+            ControlCenter.getControlCenter.getControlListener().passFileCheck()
             jFrame.dispose()
         }
     }
@@ -159,4 +161,48 @@ fun checkAdbConnect(): Boolean {
         }
     }
     return false
+}
+
+fun killAllScrcpyProc() {
+    val trayObject = LoadLanguage.getLoadLanguage.getTrayStrings()
+    val tasklist = Runtime.getRuntime().exec("tasklist").inputStream.bufferedReader().readText()
+    if (tasklist.contains("scrcpy.exe")) {
+        val p = Runtime.getRuntime().exec("taskkill /F /IM scrcpy.exe")
+        val code = p.waitFor()
+        val size = p.inputStream.bufferedReader().readLines().size
+        LogOutputWindow.takeLog("Kill scrcpy.exe: code=$code size=$size").newLine()
+        if (code == 0) {
+            TrayService.sendNotification(
+                String.format(trayObject.get("codeReturn").asString, code),
+                String.format(trayObject.get("scrcpyClosed").asString, size),
+                TrayIcon.MessageType.INFO
+            )
+        } else {
+            TrayService.sendNotification(
+                String.format(trayObject.get("codeReturn").asString, code),
+                trayObject.get("error").asString,
+                TrayIcon.MessageType.ERROR
+            )
+        }
+    }
+    if (tasklist.contains("scrcpy-noconsole.exe")) {
+        val p = Runtime.getRuntime().exec("taskkill /F /IM scrcpy-noconsole.exe")
+        val code = p.waitFor()
+        val size = p.inputStream.bufferedReader().readLines().size
+        LogOutputWindow.takeLog("Kill scrcpy-noconsole.exe: code=$code size=$size").newLine()
+        if (code == 0) {
+            TrayService.sendNotification(
+                String.format(trayObject.get("codeReturn").asString, code),
+                String.format(trayObject.get("scrcpyClosed").asString, size),
+                TrayIcon.MessageType.INFO
+            )
+        } else {
+            TrayService.sendNotification(
+                String.format(trayObject.get("codeReturn").asString, code),
+                trayObject.get("error").asString,
+                TrayIcon.MessageType.ERROR
+            )
+        }
+    }
+
 }

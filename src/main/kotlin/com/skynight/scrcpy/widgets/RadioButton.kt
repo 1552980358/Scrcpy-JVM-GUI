@@ -24,10 +24,11 @@ class RadioButton: JRadioButton {
     }
 
     constructor(): super() {
-        icon = ImageIcon("icons/RadioButton_UnSelected.png")
-        selectedIcon = ImageIcon("icons/RadioButton_Selected.png")
-        background = ControlCenter.instance.getBGColor()
-        foreground = ControlCenter.instance.getFGColor()
+        /* Use System Default */
+        //icon = ImageIcon("icons/RadioButton_UnSelected.png")
+        //selectedIcon = ImageIcon("icons/RadioButton_Selected.png")
+        background = ControlCenter.getControlCenter.getBGColor()
+        foreground = ControlCenter.getControlCenter.getFGColor()
         isFocusPainted = false
     }
 }

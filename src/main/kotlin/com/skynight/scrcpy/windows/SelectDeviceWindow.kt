@@ -2,7 +2,7 @@ package com.skynight.scrcpy.windows
 
 import com.skynight.scrcpy.base.BaseIndex.Companion.PanelMarginRight
 import com.skynight.scrcpy.base.BaseIndex.Companion.WidgetWithTextHeight
-import com.skynight.scrcpy.base.GetConnectedDevices
+import com.skynight.scrcpy.base.ConnectedDevices
 import com.skynight.scrcpy.base.LoadLanguage
 import com.skynight.scrcpy.widgets.Button
 import com.skynight.scrcpy.widgets.CheckBox
@@ -21,10 +21,10 @@ class SelectDeviceWindow(commands: MutableList<String>, single: Boolean = true):
     private val radioButtonList = mutableListOf<RadioButton>()
 
     init {
-        val getConnectedDevices = GetConnectedDevices.getInstance()
+        val getConnectedDevices = ConnectedDevices.getConnectedDevices()
         val list = getConnectedDevices.getDeviceList()
         val screenSize = Toolkit.getDefaultToolkit().screenSize
-        val jsonObject = LoadLanguage.instance.getWindowStrings("SelectDeviceWindow")
+        val jsonObject = LoadLanguage.getLoadLanguage.getWindowStrings("SelectDeviceWindow")
 
         title = jsonObject.get("title").asString
         setSize(350,  list.size * WidgetWithTextHeight + 75)

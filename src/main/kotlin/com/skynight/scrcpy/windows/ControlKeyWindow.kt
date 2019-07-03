@@ -9,16 +9,6 @@ import javax.swing.*
 
 class ControlKeyWindow private constructor(): JFrame("食用小提示") {
     companion object {
-        /*
-        private var instance: ControlKeyWindow? = null
-        @Synchronized
-        fun getInstance(): ControlKeyWindow {
-            if (instance == null) {
-                instance = ControlKeyWindow()
-            }
-            return instance as ControlKeyWindow
-        }
-        */
         val instance by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             ControlKeyWindow()
         }

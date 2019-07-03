@@ -75,6 +75,6 @@ class Label : JLabel {
 
     /* fun Init */
     constructor() : super() {
-        foreground = ControlCenter.instance.getFGColor()
+        foreground = ControlCenter.getControlCenter.getFGColor()
     }
 }

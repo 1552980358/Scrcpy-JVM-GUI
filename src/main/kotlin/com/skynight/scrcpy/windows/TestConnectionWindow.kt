@@ -14,11 +14,12 @@ class TestConnectionWindow : JFrame() {
 
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
-        val jsonObject = LoadLanguage.instance.getWindowStrings("TestConnectionWindow")
+        val jsonObject = LoadLanguage.getLoadLanguage.getWindowStrings("TestConnectionWindow")
 
         title = jsonObject.get("title").asString
         setSize(300, 120)
         isAlwaysOnTop = true
+        isResizable = false
         setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2)
         defaultCloseOperation = DISPOSE_ON_CLOSE
         isVisible = true
@@ -46,8 +47,16 @@ class TestConnectionWindow : JFrame() {
         panel.add(content)
         panel.isVisible = true
 
-        Thread {
+        val jProgressBar = JProgressBar().also {
+            it.foreground = ControlCenter.getControlCenter.getBGColor()
+            it.setBounds(10, 15, 260, 40)
+            it.maximum = 3
+            it.value = 0
+            it.isVisible = false
+        }
+        panel.add(jProgressBar)
 
+        Thread {
             if (!checkAdbConnect()) {
                 content.text = jsonObject.get("connection_check_fail").asString
                 LogOutputWindow.takeLog("Connection Check Fail")
@@ -55,21 +64,13 @@ class TestConnectionWindow : JFrame() {
                 return@Thread
             }
 
-            val jProgressBar = JProgressBar().also {
-                it.foreground = ControlCenter.instance.getBGColor()
-                it.setBounds(10, 15, 260, 40)
-                it.maximum = 3
-                it.value = 0
-                it.isVisible = true
-            }
-            panel.add(jProgressBar)
-
             title = jsonObject.get("connection_check_succeed").asString
             LogOutputWindow.takeLog("Connection Check Pass")
 
-            ControlCenter.instance.getControlListener().passAdbCheck()
+            ControlCenter.getControlCenter.getControlListener().passAdbCheck()
+            jProgressBar.isVisible = true
 
-            for (i: Int in 3 downTo  0) {
+            for (i: Int in 3 downTo 1) {
                 content.text = String.format(jsonObject.get("time_remain").asString, i)
                 LogOutputWindow.takeLog("${i}seconds left")
                 jProgressBar.value = 3 - i

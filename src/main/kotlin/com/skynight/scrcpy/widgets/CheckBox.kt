@@ -25,10 +25,11 @@ class CheckBox: JCheckBox {
     }
 
     constructor(): super() {
-        background = ControlCenter.instance.getBGColor()
-        foreground = ControlCenter.instance.getFGColor()
-        icon = ImageIcon("icons/CheckBox_UnSelected.png")
-        selectedIcon = ImageIcon("icons/CheckBox_Selected.png")
+        /* Use System Default */
+        //icon = ImageIcon("icons/CheckBox_UnSelected.png")
+        //selectedIcon = ImageIcon("icons/CheckBox_Selected.png")
+        background = ControlCenter.getControlCenter.getBGColor()
+        foreground = ControlCenter.getControlCenter.getFGColor()
         isFocusPainted = false
     }
 

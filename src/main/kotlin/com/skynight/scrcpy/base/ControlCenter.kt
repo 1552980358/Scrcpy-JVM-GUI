@@ -9,17 +9,19 @@ import com.skynight.scrcpy.base.BaseIndex.Companion.SaveConsoleSetting
 import java.awt.Color
 import java.io.File
 import java.io.FileWriter
+import javax.swing.UIManager
 
-class ControlCenter {
+class ControlCenter private constructor() {
     @Volatile
     private lateinit var controlListener: ControlListener
 
     fun setControlListener(controlListener: ControlListener) {
         this.controlListener = controlListener
         LogOutputWindow.takeLog("StartLoading")
-        LoadLanguage.instance
+        LoadLanguage.getLoadLanguage
     }
 
+    @Synchronized
     fun getControlListener(): ControlListener {
         return this.controlListener
     }
@@ -35,13 +37,16 @@ class ControlCenter {
     @Volatile
     private var tips = true
 
+    @Suppress("PrivatePropertyName")
     @Volatile
     private var FGColor = Color(0, 0, 0)
+    @Suppress("PrivatePropertyName")
     @Volatile
     private var BGColor = Color(255, 255, 255)
 
     companion object {
-        val instance by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+        val getControlCenter by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
             ControlCenter()
         }
     }
@@ -93,8 +98,6 @@ class ControlCenter {
 
                         val fg = json.get("FGColor").asJsonObject
                         FGColor = Color(fg.get("R").asInt, fg.get("G").asInt, fg.get("B").asInt)
-
-
                     } catch (e: Exception) {
                         LogOutputWindow.takeLog(e)
                     }
@@ -118,6 +121,7 @@ class ControlCenter {
             }
             timer++
         }
+
         LogOutputWindow.takeLog("Initial Load Custom Settings Time spend: ${timer}ms").newLine()
     }
 

@@ -16,9 +16,8 @@ class Button: JButton{
         setText(text)
     }
     constructor(): super() {
-        background = ControlCenter.instance.getBGColor()
-        foreground = ControlCenter.instance.getFGColor()
-        border = BorderFactory.createLineBorder(ControlCenter.instance.getFGColor())
+        //background = ControlCenter.getControlCenter.getBGColor()
+        foreground = ControlCenter.getControlCenter.getFGColor()
         isFocusPainted = false
     }
 }

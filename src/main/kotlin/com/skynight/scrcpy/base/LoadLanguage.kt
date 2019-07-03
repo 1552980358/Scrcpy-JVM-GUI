@@ -30,7 +30,7 @@ class LoadLanguage {
             return "$systemLanguage-r$systemRegion"
         }
 
-        val instance by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED ) {
+        val getLoadLanguage by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED ) {
             LoadLanguage()
         }
     }
@@ -81,7 +81,7 @@ class LoadLanguage {
 
                 setLocale(language, region)
                 Thread {
-                    ControlCenter.instance.getControlListener().checkUserSave(true)
+                    ControlCenter.getControlCenter.getControlListener().checkUserSave(true)
                 }.start()
             } catch (e: Exception) {
                 //e.printStackTrace()
@@ -95,7 +95,7 @@ class LoadLanguage {
                         LogOutputWindow.takeLog(e)
                     }
                 }
-                Thread { ControlCenter.instance.getControlListener().checkUserSave(false) }.start()
+                Thread { ControlCenter.getControlCenter.getControlListener().checkUserSave(false) }.start()
             }
         } else {
             while (loadLanguages.isAlive) {
@@ -106,7 +106,7 @@ class LoadLanguage {
                     LogOutputWindow.takeLog(e)
                 }
             }
-            Thread { ControlCenter.instance.getControlListener().checkUserSave(false) }.start()
+            Thread { ControlCenter.getControlCenter.getControlListener().checkUserSave(false) }.start()
         }
     }
 
@@ -139,5 +139,8 @@ class LoadLanguage {
     }
     fun getWindowStrings(window: String): JsonObject {
         return getJsonObject().get(window).asJsonObject
+    }
+    fun getTrayStrings(): JsonObject {
+        return getJsonObject().get("TrayService").asJsonObject
     }
 }

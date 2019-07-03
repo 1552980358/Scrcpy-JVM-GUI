@@ -20,7 +20,7 @@ import javax.swing.JLabel
 class SelectLanguageWindow: JFrame() {
     init {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
-        val loadLanguage = LoadLanguage.instance
+        val loadLanguage = LoadLanguage.getLoadLanguage
 
         loadLanguage.setLocale(
             if (File(LanguageDir + File.separator + LoadLanguage.getSystemLocale()).exists()) {
@@ -87,9 +87,9 @@ class SelectLanguageWindow: JFrame() {
                 fileWriter.flush()
                 fileWriter.close()
 
-                LoadLanguage.instance.setLocale(lang.selectedItem as String, reg.selectedItem as String)
+                LoadLanguage.getLoadLanguage.setLocale(lang.selectedItem as String, reg.selectedItem as String)
 
-                ControlCenter.instance.getControlListener().checkUserSave(true)
+                ControlCenter.getControlCenter.getControlListener().checkUserSave(true)
 
                 dispose()
             }.start()

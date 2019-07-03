@@ -122,6 +122,16 @@
 		"connection_check_fail": "设备连接检查失败!",
 		"connection_check_succeed": "检查完成, 等待主程序加载...",
 		"time_remain": "还剩下%s秒"
-	}
-
+	},
+    
+    "TrayService" : {
+        "exit": "退出",
+        "closeScrcpy": "关闭投屏窗口"
+    },
+    
+    "Message": {
+        "codeReturn": "返回代码: %s",
+        "scrcpyClosed": "已关闭%s个投屏窗口",
+        "error": "执行过程错误"
+    }
 }

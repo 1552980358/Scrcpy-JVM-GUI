@@ -116,6 +116,16 @@
 		"connection_check_fail": "連接檢測失敗!",
 		"connection_check_succeed": "檢測完成, 等待主程序加載完成...",
 		"time_remain": "剩餘%s秒"
-	}
-
+	},
+    
+    "TrayService" : {
+        "exit": "退出",
+        "closeScrcpy": "關閉投屏窗口"
+    },
+    
+    "Message": {
+        "codeReturn": "返回代碼: %s",
+        "scrcpyClosed": "已關閉%s個投屏窗口",
+        "error": "執行過程錯誤"
+    }
 }
